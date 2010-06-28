@@ -1,25 +1,17 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#include <string>
-
-using namespace std;
-
 class Config
 {
    public:
       Config();
-      void initialize();
-      unsigned char borderWidth();
+      void read();
+
+      map< KeyCombo, Command* > bindings;
 
    private:
-      string removeLeadingWhiteSpace( const string& str );
-      int splitCmdParams( const string& str, string* split );
-      void strTrim( string& str );
-      
-      
-      char *userconf, *sysconf;
-      unsigned char d_borderWidth, _borderWidth;
+      const char* userconf = "~/.config/utile/utile.rc";
+      const char* sysconf  = "/etc/utile/utile.rc";
 };
 
-#endif /* CONFIG_H_ */
+#endif

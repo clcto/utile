@@ -16,7 +16,7 @@ class SmartWindow;
 class Frame
 {
 	public:
-      Frame( unsigned int x, unsigned int y, 
+      Frame( Display*, unsigned int x, unsigned int y, 
              unsigned int w, unsigned int h );
       void addWindow( Window newWin );
       void moveResize( unsigned int x, unsigned int y,
@@ -32,6 +32,7 @@ class Frame
       Window              _background;
 		unsigned int        _xLoc,  _yLoc;
 		unsigned int        _width, _height;
+      Display            *_disp;
 };
 
 #endif /* FRAME_H_ */

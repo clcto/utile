@@ -3,14 +3,20 @@
 CC=g++
 CFLAGS=-Wall -lX11 -Iinclude -c
 LDFLAGS=-lX11
-SOURCEDIR=./
-OBJECTDIR=./bin/
+SOURCEDIR=src
+OBJECTDIR=bin
+SOURCES:=$(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/Command/*.cpp)
+OBJECTS=$(SOURCES:$(SOURCEDIR)%.cpp=$(OBJECTDIR)%.o)
+SHELL = /bin/sh
 
-.PHONY: all
-all: utile
+.DEFAULT_GOAL := utile
 
-utile: main.o Config.o Frame.o Group.o SmartWindow.o
-	$(CC) $(LDFLAGS) $(addprefix $(OBJECTDIR), $^) -o $@
+utile: $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) $*.cpp -o bin/$*.o
+$(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
+	$(CC) $(CFLAGS) $^ -o $@
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJECTS)
