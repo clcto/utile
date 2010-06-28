@@ -73,3 +73,13 @@ void utile::setCommands()
    commands[ "mod"  ] = new ModCmd();
    commands[ "bind" ] = new BindCmd();
 }
+
+bool KeyCombo::operator< ( const KeyCombo& kc )
+{
+   if( key < kc.key )
+      return true;
+   else if( key > kc.key )
+      return false;
+   else
+      return modifiers < kc.modifiers;
+}
