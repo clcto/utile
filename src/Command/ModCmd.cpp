@@ -5,6 +5,10 @@
 #include "../include/Command.h"
 #include "../include/Commands.h"
 
+#include <string>
+
+using namespace std;
+
 ModCmd::ModCmd()
 {
    usage = 
@@ -17,9 +21,10 @@ ModCmd::ModCmd()
 }
 
 // no default case. do nothing
-ModCmd::ExecuteDefault(){}
-
-ModCmd::Execute( string params )
+void ModCmd::ExecuteDefault()
 {
-   
+}
+
+void ModCmd::Execute( string params )
+{
 }
