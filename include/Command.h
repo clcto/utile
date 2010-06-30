@@ -6,6 +6,7 @@
 #define COMMAND_H_
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -16,8 +17,7 @@ class Command
       string usage;
    
    public:
-      virtual void ExecuteDefault() = 0;
-      virtual void Execute( string params ) = 0;
+      virtual void execute( vector<string> args ) = 0;
 };
 
 #endif // COMMAND_H_

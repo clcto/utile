@@ -2,16 +2,19 @@
  * ModCmd.cpp
  */
 
-#include "../include/Command.h"
-#include "../include/Commands.h"
+#include <iostream>
+#include <string.h>
 
-#include <string>
+#include "Command.h"
+#include "Commands.h"
+#include "utile.h"
 
 using namespace std;
 
 ModCmd::ModCmd()
 {
    usage = 
+      "defines a new modmask by name.\n\n"
       "mod <name> <masks>\n"
       "  name  - the new name given to the mask\n"
       "  masks - a comma separated list of masks.\n\n"
@@ -20,11 +23,22 @@ ModCmd::ModCmd()
       "  mod default super,Mod1Mask\n";
 }
 
-// no default case. do nothing
-void ModCmd::ExecuteDefault()
+void ModCmd::execute( vector<string> params )
 {
-}
+   if( params.size() >= 3 )
+   {
+      unsigned int numMask = 0;
+      vector<string> strMasks;
+      
+      strMasks = tokenize( params[2], "," );
 
-void ModCmd::Execute( string params )
-{
+      for( unsigned int i = 0; i < strMasks.size(); ++i )
+         numMask |= utile::masks[ strMasks[i] ];
+
+      utile::masks[ params[1] ] = numMask;
+
+      cerr << "Mask \'" << params[1]
+           << "\' is bound to: " << utile::masks[ params[1] ]
+           << '\n';
+   }
 }
