@@ -79,15 +79,15 @@ void utile::initCommands()
 
 void utile::initMasks()
 {
-   masks[ "Mod1"     ] = Mod1Mask;
-   masks[ "Mod1Mask" ] = Mod1Mask;
-   masks[ "Mod2"     ] = Mod2Mask;
-   masks[ "Mod2Mask" ] = Mod2Mask;
-   masks[ "Mod3"     ] = Mod3Mask;
-   masks[ "Mod3Mask" ] = Mod3Mask;
-   masks[ "Mod4"     ] = Mod4Mask;
-   masks[ "Mod4Mask" ] = Mod4Mask;
-   masks[ "none"     ] = 0;
+   masks[ "Shift" ] = ShiftMask;
+   masks[ "Ctrl"  ] = ControlMask;
+   masks[ "Caps"  ] = ShiftLockMask;
+   masks[ "Mod1"  ] = Mod1Mask;
+   masks[ "Mod2"  ] = Mod2Mask;
+   masks[ "Mod3"  ] = Mod3Mask;
+   masks[ "Mod4"  ] = Mod4Mask;
+   masks[ "Mod5"  ] = Mod5Mask;
+   masks[ "none"  ] = 0;
 }
 
 void utile::readConfig()
