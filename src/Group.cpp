@@ -8,16 +8,26 @@
 
 using namespace std;
 
-/*
- * at some point this will take in a 
- * layout... but now lets just make one
- * frame fullscreen
- */
-Group::Group( unsigned int x, unsigned int y, 
+Group::Group(){}
+
+Group::Group( Window r, 
+              unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h,
-              Group* p, Frame* f):
-   _parent(p), _frame(f)
+              Group* p, Frame* f)
 {
+   init( r, x, y, w, h, p, f );
+}
+
+void Group::init( Window r, 
+                  unsigned int x, unsigned int y, 
+                  unsigned int w, unsigned int h,
+                  Group* p, Frame* f)
+{
+   // copy data
+   _parent = p;
+   _frame  = f;
+   _root   = r;
+
    if( !_frame )
       _frame = new Frame( x, y, w, h );
    else
@@ -27,6 +37,7 @@ Group::Group( unsigned int x, unsigned int y,
    _children[1] = NULL;
 }
 
+
 Group* Group::splitHorizontal()
 {
    int w  = _frame->width();
@@ -34,8 +45,8 @@ Group* Group::splitHorizontal()
    int x  = _frame->xLoc();
    int y  = _frame->yLoc();
 
-   _children[0] = new Group( x,     y, w/2, h, this, _frame );
-   _children[1] = new Group( x+w/2, y, w/2, h, this );
+   _children[0] = new Group( _root, x, y, w/2, h, this, _frame );
+   _children[1] = new Group( _root, x+w/2, y, w/2, h, this );
    _bSplitVertical = 0;
    _frame = NULL;
    return _children[0];

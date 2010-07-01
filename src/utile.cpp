@@ -7,6 +7,7 @@
 #include <X11/Xlib.h>
 #include "Frame.h"
 #include "Group.h"
+#include "Page.h"
 #include "utile.h"
 
 using namespace std;
@@ -47,6 +48,8 @@ int utile::run()
    initMasks();
 
    readConfig();
+
+   Page p( utile::root );
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask );
