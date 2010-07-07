@@ -84,7 +84,6 @@ void utile::initMasks()
 {
    masks[ "Shift" ] = ShiftMask;
    masks[ "Ctrl"  ] = ControlMask;
-   masks[ "Caps"  ] = ShiftLockMask;
    masks[ "Mod1"  ] = Mod1Mask;
    masks[ "Mod2"  ] = Mod2Mask;
    masks[ "Mod3"  ] = Mod3Mask;
