@@ -16,13 +16,13 @@ class Page
 {
    public:
       Page( Window root, string layoutname = "default" );
-      void setCurGroup( Group* );
-      Group* getCurGroup();
+      void setCurFrame( Frame* );
+      Frame* getCurFrame();
 
    private:
       Window  _rootWindow;
       Group   _rootGroup;
-      Group*  _curGroup;
+      Frame*  _curFrame;
      
       void runLayout( string ); 
 };

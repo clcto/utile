@@ -19,12 +19,12 @@ void Page::runLayout( string layoutname )
    
 }/*}}}*/
 
-void Page::setCurGroup( Group* g )
+void Page::setCurFrame( Frame* f )
 {/*{{{*/
-   _curGroup = g;
+   _curFrame = f;
 }/*}}}*/
 
-Group* Page::getCurGroup()
+Frame* Page::getCurFrame()
 {/*{{{*/
-   return _curGroup;
+   return _curFrame;
 }/*}}}*/
