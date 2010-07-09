@@ -14,13 +14,13 @@ class Group
 {
    public:
       Group();
-      Group( const Page*, Window root,
+      Group( Page*, Window root,
              unsigned int, unsigned int, unsigned int, unsigned int,
              Group* parent = NULL, Frame* frame = NULL );
       Group* splitHorizontal();
       Group* splitVertical();
       void addWindow( Window w );
-      void init( const Page*,Window root, unsigned int, 
+      void init( Page*, Window root, unsigned int, 
                  unsigned int, unsigned int, unsigned int,
                  Group* parent = NULL, Frame* frame = NULL );
 
@@ -30,7 +30,7 @@ class Group
       Frame* _frame;
       char   _bSplitVertical;
       Window _root;
-      const Page*  _page;
+      Page*    _page;
 };
 
 #endif /* GROUP_H_ */

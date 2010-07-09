@@ -5,12 +5,13 @@
 #include <X11/Xlib.h>
 #include "Frame.h"
 #include "Group.h"
+#include "Page.h"
 
 using namespace std;
 
 Group::Group(){}
 
-Group::Group( const Page* pg, Window r, 
+Group::Group( Page* pg, Window r, 
               unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h,
               Group* p, Frame* f)
@@ -18,7 +19,7 @@ Group::Group( const Page* pg, Window r,
    init( pg, r, x, y, w, h, p, f );
 }/*}}}*/
 
-void Group::init( const Page* pg,Window r, 
+void Group::init( Page* pg, Window r, 
                   unsigned int x, unsigned int y, 
                   unsigned int w, unsigned int h,
                   Group* p, Frame* f)
@@ -30,7 +31,10 @@ void Group::init( const Page* pg,Window r,
    _root   = r;
 
    if( !_frame )
+   {
       _frame = new Frame( x, y, w, h );
+      _page->setCurFrame( _frame );
+   }
    else
       _frame->moveResize( x, y, w, h );
 
