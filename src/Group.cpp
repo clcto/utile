@@ -1,11 +1,11 @@
 /*
- * Page.cpp
+ * Group.cpp
  */
 
-#include "Page.h"
+#include "Group.h"
 #include "utile.h"
 
-Page::Page( Window root, string layoutname ):
+Group::Group( Window root, string layoutname ):
    _rootWindow( root )
 {/*{{{*/
    unsigned int width  = DisplayWidth(  utile::display, 0 );
@@ -14,17 +14,17 @@ Page::Page( Window root, string layoutname ):
    _rootGroupNode.init( this, _rootWindow, 0, 0, width, height );
 }/*}}}*/
 
-void Page::runLayout( string layoutname )
+void Group::runLayout( string layoutname )
 {/*{{{*/
    
 }/*}}}*/
 
-void Page::setCurFrame( Frame* f )
+void Group::setCurFrame( Frame* f )
 {/*{{{*/
    _curFrame = f;
 }/*}}}*/
 
-Frame* Page::getCurFrame()
+Frame* Group::getCurFrame()
 {/*{{{*/
    return _curFrame;
 }/*}}}*/

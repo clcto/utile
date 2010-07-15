@@ -7,13 +7,14 @@
 #include <X11/Xlib.h>
 #include "Frame.h"
 #include "GroupNode.h"
-#include "Page.h"
+#include "Group.h"
 #include "utile.h"
 
 using namespace std;
 
 Display* utile::display;
 Window   utile::root;
+string   utile::launcher;
 
 map< string, Command* >    utile::commands;
 map< KeyCombo, vector<string> >  utile::bindings;
@@ -49,7 +50,7 @@ int utile::run()
 
    readConfig();
 
-   Page p( utile::root );
+   Group p( utile::root );
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask );

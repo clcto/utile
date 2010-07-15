@@ -33,6 +33,7 @@ class utile
 
       static Display *display;
       static Window   root;
+      static string   launcher;
       static map< string, Command* > commands;
       static map< KeyCombo, vector<string> > bindings;
       static map< string, unsigned int> masks;

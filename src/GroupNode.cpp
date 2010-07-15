@@ -10,7 +10,7 @@ using namespace std;
 
 GroupNode::GroupNode(){}
 
-GroupNode::GroupNode( const Page* pg, Window r, 
+GroupNode::GroupNode( const Group* pg, Window r, 
               unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h,
               GroupNode* p, Frame* f)
@@ -18,7 +18,7 @@ GroupNode::GroupNode( const Page* pg, Window r,
    init( pg, r, x, y, w, h, p, f );
 }/*}}}*/
 
-void GroupNode::init( const Page* pg,Window r, 
+void GroupNode::init( const Group* pg,Window r, 
                   unsigned int x, unsigned int y, 
                   unsigned int w, unsigned int h,
                   GroupNode* p, Frame* f)

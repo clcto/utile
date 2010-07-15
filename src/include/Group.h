@@ -1,36 +1,30 @@
 /*
- * GroupNode.h
+ * Group.h
  */
 
-#ifndef GROUP_NODE_H_
-#define GROUP_NODE_H_
+#ifndef GROUP_H_
+#define GROUP_H_
 
 #include <X11/Xlib.h>
-#include "Frame.h"
+#include <string>
 
-class Page;
+#include "GroupNode.h"
 
-class GroupNode
+using namespace std;
+
+class Group
 {
    public:
-      GroupNode();
-      GroupNode( const Page*, Window root,
-             unsigned int, unsigned int, unsigned int, unsigned int,
-             GroupNode* parent = NULL, Frame* frame = NULL );
-      GroupNode* splitHorizontal();
-      GroupNode* splitVertical();
-      void addWindow( Window w );
-      void init( const Page*,Window root, unsigned int, 
-                 unsigned int, unsigned int, unsigned int,
-                 GroupNode* parent = NULL, Frame* frame = NULL );
+      Group( Window root, string layoutname = "default" );
+      void setCurFrame( Frame* );
+      Frame* getCurFrame();
 
    private:
-      GroupNode* _children[2];
-      GroupNode* _parent;
-      Frame* _frame;
-      char   _bSplitVertical;
-      Window _root;
-      const Page*  _page;
+      Window    _rootWindow;
+      GroupNode _rootGroupNode;
+      Frame*    _curFrame;
+     
+      void runLayout( string ); 
 };
 
-#endif /* GROUP_NODE_H_ */
+#endif
