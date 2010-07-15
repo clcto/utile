@@ -36,7 +36,6 @@ class utile
       static map< string, Command* > commands;
       static map< KeyCombo, vector<string> > bindings;
       static map< string, unsigned int> masks;
-      static string launcher;
 
    private:
       static void initCommands();

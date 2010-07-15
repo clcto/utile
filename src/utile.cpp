@@ -6,7 +6,7 @@
 #include <iostream>
 #include <X11/Xlib.h>
 #include "Frame.h"
-#include "Group.h"
+#include "GroupNode.h"
 #include "Page.h"
 #include "utile.h"
 
@@ -14,7 +14,6 @@ using namespace std;
 
 Display* utile::display;
 Window   utile::root;
-string   utile::launcher;
 
 map< string, Command* >    utile::commands;
 map< KeyCombo, vector<string> >  utile::bindings;
@@ -62,9 +61,7 @@ int utile::run()
       switch( event.type )
       {
          case MapRequest:
-            p.getCurFrame()->addWindow(
-                                 event.xmaprequest.window );
-            //Global::curGroup->addWindow( 
+            //Global::curGroupNode->addWindow( 
             //                    event.xmaprequest.window );
             break;
          case KeyPress:
@@ -77,10 +74,10 @@ int utile::run()
 
 void utile::initCommands()
 {
-   commands[ "mod"  ] = new ModCmd();
-   commands[ "launcher" ] = new LauncherCmd();
+   commands[ "mod"  ]     = new ModCmd();
+   commands[ "modifier" ] = commands[ "mod" ];
+
    commands[ "bind" ] = new BindCmd();
-   commands[ "run" ] = new RunCmd();
 }
 
 void utile::initMasks()

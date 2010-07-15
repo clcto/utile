@@ -8,7 +8,7 @@
 #include <X11/Xlib.h>
 #include <string>
 
-#include "Group.h"
+#include "GroupNode.h"
 
 using namespace std;
 
@@ -20,9 +20,9 @@ class Page
       Frame* getCurFrame();
 
    private:
-      Window  _rootWindow;
-      Group   _rootGroup;
-      Frame*  _curFrame;
+      Window    _rootWindow;
+      GroupNode _rootGroupNode;
+      Frame*    _curFrame;
      
       void runLayout( string ); 
 };

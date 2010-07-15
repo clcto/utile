@@ -1,69 +1,30 @@
 /*
- * Group.cpp
+ * Page.cpp
  */
 
-#include <X11/Xlib.h>
-#include "Frame.h"
-#include "Group.h"
 #include "Page.h"
+#include "utile.h"
 
-using namespace std;
-
-Group::Group(){}
-
-Group::Group( Page* pg, Window r, 
-              unsigned int x, unsigned int y, 
-              unsigned int w, unsigned int h,
-              Group* p, Frame* f)
+Page::Page( Window root, string layoutname ):
+   _rootWindow( root )
 {/*{{{*/
-   init( pg, r, x, y, w, h, p, f );
+   unsigned int width  = DisplayWidth(  utile::display, 0 );
+   unsigned int height = DisplayHeight( utile::display, 0 );
+
+   _rootGroupNode.init( this, _rootWindow, 0, 0, width, height );
 }/*}}}*/
 
-void Group::init( Page* pg, Window r, 
-                  unsigned int x, unsigned int y, 
-                  unsigned int w, unsigned int h,
-                  Group* p, Frame* f)
+void Page::runLayout( string layoutname )
 {/*{{{*/
-   // copy data
-   _page = pg;
-   _parent = p;
-   _frame  = f;
-   _root   = r;
-
-   if( !_frame )
-   {
-      _frame = new Frame( x, y, w, h );
-      _page->setCurFrame( _frame );
-   }
-   else
-      _frame->moveResize( x, y, w, h );
-
-   _children[0] = NULL;
-   _children[1] = NULL;
+   
 }/*}}}*/
 
-
-Group* Group::splitHorizontal()
+void Page::setCurFrame( Frame* f )
 {/*{{{*/
-   int w  = _frame->width();
-   int h  = _frame->height();
-   int x  = _frame->xLoc();
-   int y  = _frame->yLoc();
-
-   _children[0] = new Group( _page, _root, x, y, w/2, h, this, _frame );
-   _children[1] = new Group( _page, _root, x+w/2, y, w/2, h, this );
-   _bSplitVertical = 0;
-   _frame = NULL;
-   return _children[0];
+   _curFrame = f;
 }/*}}}*/
 
-Group* Group::splitVertical()
+Frame* Page::getCurFrame()
 {/*{{{*/
-   return NULL;
-}/*}}}*/
-
-void Group::addWindow( Window w )
-{/*{{{*/
-   if( _frame )
-      _frame->addWindow( w );
+   return _curFrame;
 }/*}}}*/
