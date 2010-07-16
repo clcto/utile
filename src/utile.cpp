@@ -80,14 +80,14 @@ int utile::run()
 
 void utile::initCommands()
 {
+   log.write( LogLevel_Trace, "Initializing commands" );
    commands[ "mod"  ]     = new ModCmd();
-   commands[ "modifier" ] = commands[ "mod" ];
-
-   commands[ "bind" ] = new BindCmd();
+   commands[ "bind" ]     = new BindCmd();
 }
 
 void utile::initMasks()
 {
+   log.write( LogLevel_Trace, "Initializing default mods" );
    masks[ "Shift" ] = ShiftMask;
    masks[ "Ctrl"  ] = ControlMask;
    masks[ "Mod1"  ] = Mod1Mask;
@@ -110,9 +110,17 @@ void utile::readConfig()
    ifstream sysFile( sys_conf );
    
    if( usrFile )
+   {
+      log.write( LogLevel_Debug, "Reading user init file" );
       parseFile( usrFile );
+   }
    else if( sysFile )
+   {
+      log.write( LogLevel_Debug, "Reading system init file" );
       parseFile( sysFile );
+   }
+
+   log.write( LogLevel_Trace, "Finished reading init files" );
 }
 
 void utile::parseFile( ifstream& file )
