@@ -14,6 +14,7 @@
 
 #include "Command.h"
 #include "Commands.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -37,6 +38,7 @@ class utile
       static map< string, Command* > commands;
       static map< KeyCombo, vector<string> > bindings;
       static map< string, unsigned int> masks;
+      static Logger log;
 
    private:
       static void initCommands();

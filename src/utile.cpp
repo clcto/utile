@@ -15,6 +15,7 @@ using namespace std;
 Display* utile::display;
 Window   utile::root;
 string   utile::launcher;
+Logger   utile::log;
 
 map< string, Command* >    utile::commands;
 map< KeyCombo, vector<string> >  utile::bindings;
@@ -28,12 +29,16 @@ int main( int argc, char** argv )
 
 int utile::run()
 {
+   log.open( LogLevel_Debug );
+   log.write( LogLevel_Info, "utile started." );
+
       // tries to open the displaylay. quit if it fails
    display = XOpenDisplay( NULL );
    if( !display )
    {
-      cerr << "Unable to open displaylay.\n"
-           << "Make sure X is running.\n";
+      log.write( LogLevel_Fatal,
+         "Unable to open display. "
+         "Make sure X is running." );
       return EXIT_FAILURE;
    }
 
