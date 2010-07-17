@@ -11,7 +11,9 @@ Group::Group( Window root, string layoutname ):
    unsigned int width  = DisplayWidth(  utile::display, 0 );
    unsigned int height = DisplayHeight( utile::display, 0 );
 
-   _rootGroupNode.init( this, _rootWindow, 0, 0, width, height );
+   _rootNode = new GroupNode( this, _rootWindow, 
+                       0, 0, width, height );
+   _curNode = _rootNode;
 }/*}}}*/
 
 void Group::runLayout( string layoutname )
@@ -19,12 +21,12 @@ void Group::runLayout( string layoutname )
    
 }/*}}}*/
 
-void Group::setCurFrame( Frame* f )
+void Group::setCur( GroupNode* n )
 {/*{{{*/
-   _curFrame = f;
+   _curNode = n;
 }/*}}}*/
 
-Frame* Group::getCurFrame()
+GroupNode* Group::getCur()
 {/*{{{*/
-   return _curFrame;
+   return _curNode;
 }/*}}}*/

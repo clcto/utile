@@ -55,7 +55,7 @@ int utile::run()
 
    readConfig();
 
-   Group p( utile::root );
+   Group g( utile::root );
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask );
@@ -68,7 +68,7 @@ int utile::run()
       {
          case MapRequest:
             log.write( LogLevel_Trace, "Received MapRequest" );
-            
+            g.getCur()->addWindow( event.xmaprequest.window ); 
             //Global::curGroupNode->addWindow( 
             //                    event.xmaprequest.window );
             break;

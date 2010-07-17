@@ -16,13 +16,13 @@ class Group
 {
    public:
       Group( Window root, string layoutname = "default" );
-      void setCurFrame( Frame* );
-      Frame* getCurFrame();
+      void setCur( GroupNode* );
+      GroupNode* getCur();
 
    private:
-      Window    _rootWindow;
-      GroupNode _rootGroupNode;
-      Frame*    _curFrame;
+      Window     _rootWindow;
+      GroupNode* _rootNode;
+      GroupNode* _curNode;
      
       void runLayout( string ); 
 };

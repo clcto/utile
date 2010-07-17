@@ -14,13 +14,13 @@ class GroupNode
 {
    public:
       GroupNode();
-      GroupNode( const Group*, Window root,
+      GroupNode( Group*, Window root,
              unsigned int, unsigned int, unsigned int, unsigned int,
              GroupNode* parent = NULL, Frame* frame = NULL );
       GroupNode* splitHorizontal();
       GroupNode* splitVertical();
       void addWindow( Window w );
-      void init( const Group*,Window root, unsigned int, 
+      void init( Group*,Window root, unsigned int, 
                  unsigned int, unsigned int, unsigned int,
                  GroupNode* parent = NULL, Frame* frame = NULL );
 
@@ -30,7 +30,7 @@ class GroupNode
       Frame* _frame;
       char   _bSplitVertical;
       Window _root;
-      const Group*  _page;
+      Group*  _group;
 };
 
 #endif /* GROUP_NODE_H_ */
