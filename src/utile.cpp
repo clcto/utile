@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <iostream>
 #include <X11/Xlib.h>
-#include "Frame.h"
-#include "GroupNode.h"
-#include "Group.h"
-#include "utile.h"
+#include "Frame.hpp"
+#include "GroupNode.hpp"
+#include "Group.hpp"
+#include "utile.hpp"
 
 using namespace std;
 
@@ -67,10 +67,13 @@ int utile::run()
       switch( event.type )
       {
          case MapRequest:
+            log.write( LogLevel_Trace, "Received MapRequest" );
+            
             //Global::curGroupNode->addWindow( 
             //                    event.xmaprequest.window );
             break;
          case KeyPress:
+            log.write( LogLevel_Trace, "Received KeyPress" );
             processKeyPress( event.xkey );
             break;
             
@@ -81,8 +84,10 @@ int utile::run()
 void utile::initCommands()
 {
    log.write( LogLevel_Trace, "Initializing commands" );
-   commands[ "mod"  ]     = new ModCmd();
+   commands[ "mod" ]     = new ModCmd();
    commands[ "bind" ]     = new BindCmd();
+   commands[ "launcher" ] = new LauncherCmd();
+   commands[ "run" ]      = new RunCmd();
 }
 
 void utile::initMasks()
@@ -100,9 +105,10 @@ void utile::initMasks()
 
 void utile::readConfig()
 {
+   log.write( LogLevel_Trace, "Started reading init file" );
    string usr_conf;
    usr_conf  = getenv( "HOME" );
-   usr_conf += "/.config/utile/utile.rc";
+   usr_conf += "/.utile/utile.rc";
 
    char* sys_conf = (char*) "/etc/utile/utile.rc";
 
@@ -119,6 +125,8 @@ void utile::readConfig()
       log.write( LogLevel_Debug, "Reading system init file" );
       parseFile( sysFile );
    }
+   else
+      log.write( LogLevel_Debug, "No init files found" );
 
    log.write( LogLevel_Trace, "Finished reading init files" );
 }
@@ -140,7 +148,13 @@ void utile::parseFile( ifstream& file )
          tokLine = tokenize( line );
             // we checked for an empty line above
             // so we will have atleast one token here
-         utile::commands[ tokLine[0] ]->execute( tokLine );  
+         Command* cmd = utile::commands[ tokLine[0] ];
+
+         if( cmd )
+            cmd->execute( tokLine );  
+            // prevent the map from adding new items
+         else
+            utile::commands.erase( tokLine[0] );
        
       }
       
@@ -168,11 +182,18 @@ void utile::processKeyPress( const XKeyEvent& ev )
    kc.modifiers = ev.state;
 
    vector<string> strCmd = bindings[ kc ];
-   cerr << "String CMD: " << strCmd[0] << "\n";
 
    Command *cmd = commands[ strCmd[0] ];
    if( cmd )
       cmd->execute(strCmd);
+   else
+   {
+      log.write( LogLevel_Warning, "Invalid command:" );
+      log.write( LogLevel_Warning, strCmd[0] );
+
+         // remove invalid commands
+      commands.erase( strCmd[0] );
+   }
 }
 
 

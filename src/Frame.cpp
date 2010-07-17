@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "Frame.h"
-#include "SmartWindow.h"
+#include "Frame.hpp"
+#include "SmartWindow.hpp"
 
 Frame::Frame( unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h ):

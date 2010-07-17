@@ -3,8 +3,8 @@
  */
 
 #include <X11/Xlib.h>
-#include "Frame.h"
-#include "SmartWindow.h"
+#include "Frame.hpp"
+#include "SmartWindow.hpp"
 
 /*
  * creates a new smart window with window

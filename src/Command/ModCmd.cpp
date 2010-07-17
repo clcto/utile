@@ -5,9 +5,9 @@
 #include <iostream>
 #include <string.h>
 
-#include "Command.h"
-#include "Commands.h"
-#include "utile.h"
+#include "Command.hpp"
+#include "Commands.hpp"
+#include "utile.hpp"
 
 using namespace std;
 
@@ -25,6 +25,7 @@ ModCmd::ModCmd()
 
 void ModCmd::execute( vector<string> params )
 {
+   utile::log.write( LogLevel_Trace, "Executing mod command" );
    if( params.size() >= 3 )
    {
       unsigned int numMask = 0;
@@ -36,9 +37,5 @@ void ModCmd::execute( vector<string> params )
          numMask |= utile::masks[ strMasks[i] ];
 
       utile::masks[ params[1] ] = numMask;
-
-      cerr << "Mask \'" << params[1]
-           << "\' is bound to: " << utile::masks[ params[1] ]
-           << '\n';
    }
 }

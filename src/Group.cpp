@@ -2,8 +2,8 @@
  * Group.cpp
  */
 
-#include "Group.h"
-#include "utile.h"
+#include "Group.hpp"
+#include "utile.hpp"
 
 Group::Group( Window root, string layoutname ):
    _rootWindow( root )

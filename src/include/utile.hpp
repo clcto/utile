@@ -12,9 +12,9 @@
 #include <vector>
 #include <map>
 
-#include "Command.h"
-#include "Commands.h"
-#include "Logger.h"
+#include "Command.hpp"
+#include "Commands.hpp"
+#include "Logger.hpp"
 
 using namespace std;
 

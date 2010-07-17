@@ -6,7 +6,7 @@
 #define SMARTWINDOW_H_
 
 #include <X11/Xlib.h>
-#include "Frame.h"
+#include "Frame.hpp"
 
 class Frame;
 

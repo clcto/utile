@@ -7,8 +7,8 @@
 
 #include <X11/Xlib.h>
 #include <vector>
-#include "SmartWindow.h"
-#include "utile.h"
+#include "SmartWindow.hpp"
+#include "utile.hpp"
 
 using namespace std;
 

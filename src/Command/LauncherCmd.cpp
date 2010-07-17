@@ -2,9 +2,9 @@
  * LauncherCmd.cpp
  */
 
-#include "Command.h"
-#include "Commands.h"
-#include "utile.h"
+#include "Command.hpp"
+#include "Commands.hpp"
+#include "utile.hpp"
 
 #include <X11/Xlib.h>
 #include <string>
@@ -18,6 +18,8 @@ LauncherCmd::LauncherCmd()
 
 void LauncherCmd::execute( vector<string> params )
 {
+   utile::log.write( LogLevel_Trace,
+                     "Executing launcher command" );
    if( params.size() >= 2 )
    {
       string cmd = "";

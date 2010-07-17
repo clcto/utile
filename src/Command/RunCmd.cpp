@@ -6,9 +6,9 @@
 #include <iostream>
 #include <string.h>
 
-#include "Command.h"
-#include "Commands.h"
-#include "utile.h"
+#include "Command.hpp"
+#include "Commands.hpp"
+#include "utile.hpp"
 
 using namespace std;
 
@@ -19,18 +19,15 @@ RunCmd::RunCmd()
 
 void RunCmd::execute( vector<string> params )
 {
+   utile::log.write( LogLevel_Trace, "Executing run command" );
    if( !utile::launcher.empty() )
    {
       string command;
-      /*
-      command  = "prog='print-path|";
-      command += utile::launcher;
-      command += "' && exec $prog";
-      */
       
-      command  = "exec `print-path|";
+      command  = "exec `print-path | ";
       command += utile::launcher;
-      command += "`";
+      command += "` &";
+
       system( command.c_str() );
    }
 }

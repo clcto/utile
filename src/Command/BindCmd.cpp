@@ -2,9 +2,9 @@
  * BindCmd.cpp
  */
 
-#include "Command.h"
-#include "Commands.h"
-#include "utile.h"
+#include "Command.hpp"
+#include "Commands.hpp"
+#include "utile.hpp"
 
 #include <X11/Xlib.h>
 #include <string>
@@ -18,6 +18,7 @@ BindCmd::BindCmd()
 
 void BindCmd::execute( vector<string> params )
 {
+   utile::log.write( LogLevel_Trace, "Executing bind command" );
    if( params.size() >=4 )
    {
       unsigned int modMasks = 0;

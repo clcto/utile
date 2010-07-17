@@ -8,7 +8,7 @@
 #include <X11/Xlib.h>
 #include <string>
 
-#include "GroupNode.h"
+#include "GroupNode.hpp"
 
 using namespace std;
 

@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <iostream>
 #include <cstdlib>
-#include "Logger.h"
+#include "Logger.hpp"
 
 Logger::Logger(){}
 
@@ -58,7 +58,7 @@ bool Logger::open( LogLevel level )
 
 void Logger::write( LogLevel level, string message )
 {
-   if( level < _maxLogLevel && _logFile.is_open() )
+   if( level <= _maxLogLevel && _logFile.is_open() )
    {
       _logFile << logPrefix( level ) << message << '\n';
       _logFile.flush();
@@ -77,18 +77,18 @@ string Logger::logPrefix( LogLevel level )
    switch( level )
    {
       case LogLevel_Fatal:
-         return "<!! FATAL> ";
+         return "! fatal: ";
       case LogLevel_Error:
-         return "<!  ERROR> ";
+         return "* error: ";
       case LogLevel_Warning:
-         return "<*   WARN> ";
+         return "$  warn: ";
       case LogLevel_Info:
-         return "<+   INFO> ";
+         return "+  info: ";
       case LogLevel_Trace:
-         return "<=  TRACE> ";
+         return "= trace: ";
       case LogLevel_Debug:
-         return "<-  DEBUG> ";
+         return ". debug: ";
       default:
-         return "< ?????? > ";
+         return " ????? : ";
    }
 }

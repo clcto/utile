@@ -3,8 +3,8 @@
  */
 
 #include <X11/Xlib.h>
-#include "Frame.h"
-#include "GroupNode.h"
+#include "Frame.hpp"
+#include "GroupNode.hpp"
 
 using namespace std;
 

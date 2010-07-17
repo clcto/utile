@@ -5,7 +5,7 @@
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
-#include "Command.h"
+#include "Command.hpp"
 
 using namespace std;
 
@@ -20,6 +20,20 @@ class BindCmd : public Command
 {
    public:
       BindCmd();
+      void execute( vector<string> args );   
+};
+
+class LauncherCmd : public Command
+{
+   public:
+      LauncherCmd();
+      void execute( vector<string> args );   
+};
+
+class RunCmd : public Command
+{
+   public:
+      RunCmd();
       void execute( vector<string> args );   
 };
 
