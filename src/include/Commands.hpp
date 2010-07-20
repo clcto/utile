@@ -1,9 +1,9 @@
 /*
- * Commands.h
+ * Commands.hpp
  */
 
-#ifndef COMMANDS_H_
-#define COMMANDS_H_
+#ifndef COMMANDS_HPP_
+#define COMMANDS_HPP_
 
 #include "Command.hpp"
 
@@ -37,4 +37,4 @@ class RunCmd : public Command
       void execute( vector<string> args );   
 };
 
-#endif // COMMANDS_H_
+#endif // COMMANDS_HPP_
