@@ -1,9 +1,9 @@
 /*
- * Command.h
+ * Command.hpp
  */
 
-#ifndef COMMAND_H_
-#define COMMAND_H_
+#ifndef COMMAND_HPP_
+#define COMMAND_HPP_
 
 #include <string>
 #include <vector>
@@ -20,4 +20,4 @@ class Command
       virtual void execute( vector<string> args ) = 0;
 };
 
-#endif // COMMAND_H_
+#endif // COMMAND_HPP_
