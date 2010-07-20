@@ -1,5 +1,9 @@
 /*
  * Frame.cpp
+ *   one frame/tile on the screen
+ *
+ * Copyright (c) 2010
+ *   Carick Wienke <carick dot wienke at gmail dot com>
  */
 
 #include <X11/Xlib.h>
@@ -9,6 +13,12 @@
 #include "Frame.hpp"
 #include "SmartWindow.hpp"
 
+/* 
+ * creates a new frame with the information passed
+ *
+ * x, y: the x and y locations
+ * w, h: the width and height
+ */
 Frame::Frame( unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h ):
    _xLoc( x ),
@@ -32,8 +42,13 @@ Frame::Frame( unsigned int x, unsigned int y,
    XMapWindow( utile::display, _background );
 }/*}}}*/
 
+/*
+ * adds a window to the frame
+ *
+ * newWin: window to add
+ */
 void Frame::addWindow( Window newWin )
-{
+{ /*{{{*/
    unsigned char bw = 1; //Global::config.borderWidth();
 
    XReparentWindow( utile::display, newWin, 
@@ -46,7 +61,7 @@ void Frame::addWindow( Window newWin )
 
    _windows.push_back( sw );
    _curWindow = _windows.size() - 1;
-}
+} /*}}}*/
 
 void Frame::moveResize( unsigned int x, unsigned int y,
                         unsigned int w, unsigned int h )
