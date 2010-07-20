@@ -1,7 +1,7 @@
 # vim:noet
 
 CC=g++
-CFLAGS=-Wall -lX11 -Isrc/include -c
+CFLAGS=-Wall -Isrc/include -c
 LDFLAGS=-lX11
 SOURCEDIR=src
 OBJECTDIR=bin
