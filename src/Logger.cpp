@@ -1,5 +1,17 @@
 /*
  * Logger.cpp
+ *   writes messages to a file, allowing
+ *   for messages to be ignored if they are
+ *   at a lower level
+ *
+ * 2010.07.20:
+ *   > opens a compiled in log file
+ *   > writes formatted messages to file
+ *   > if the log isn't opened and it is written to
+ *     the message is logged to standard error
+ *
+ * Copyright (c) 2010
+ *   Carick Wienke <carick dot wienke at gmail dot com> 
  */
 
 #include <sys/stat.h>
@@ -8,6 +20,9 @@
 #include <cstdlib>
 #include "Logger.hpp"
 
+/* 
+ * Default constructor, does nothing
+ */
 Logger::Logger(){}
 
 /*
@@ -19,13 +34,26 @@ Logger::~Logger()
       _logFile.close();
 }
 
+/*
+ * opens the file
+ * Messages with a lower or equal level than
+ *   passed will be logged. Others are ignored
+ * 
+ * returns whether opening the file is successful
+ */
 bool Logger::open( LogLevel level )
 {
+      // save the log level
    _maxLogLevel = level;
-
+ 
+      // close the file if it is already open
    if( _logFile.is_open() )
       _logFile.close();
 
+      // move the last log, allowing a user to
+      // re-run the wm to view the old log file.
+      // without this, the last log would be overwritten.
+      // this is similar functionality to Xorg
    string home = getenv( "HOME" );
 
    string dir = home;
@@ -42,7 +70,8 @@ bool Logger::open( LogLevel level )
    log.append("/utile.log");
 
    rename( log.c_str(), logbackup.c_str() );
-
+ 
+      // try to open the log
    _logFile.open( log.c_str() );
 
    if( !_logFile.is_open() )
@@ -56,6 +85,14 @@ bool Logger::open( LogLevel level )
       return true;
 }
 
+/*
+ * write a formatted message to the log.
+ * 
+ * level: the importance of the message
+ * format: the format string, same of (*)printf
+ * params: the parameters for the format, 
+ *         these are not checked at compile time
+ */
 void Logger::write( LogLevel level, string format, ... )
 {
       // get the variadic variables
@@ -66,9 +103,26 @@ void Logger::write( LogLevel level, string format, ... )
 
    write( level, format, ap );
 
+      // close the va_list
    va_end( ap );
 }
 
+/*
+ * set the log level
+ *
+ * level: the new lowest importance message to be logged
+ */
+void Logger::setLogLevel( LogLevel level )
+{
+   _maxLogLevel = level;
+}
+
+/* ---- PRIVATE METHODS ---- */
+
+/*
+ * private function to write to the log with
+ * a va_list instead of "..."
+ */
 void Logger::write( LogLevel level,
                     string format,
                     va_list ap )
@@ -96,11 +150,10 @@ void Logger::write( LogLevel level,
    }
 }
 
-void Logger::setLogLevel( LogLevel level )
-{
-   _maxLogLevel = level;
-}
-
+/*
+ * converts level into a prefix of the message to be
+ * written into the log
+ */
 string Logger::logPrefix( LogLevel level )
 {
    switch( level )
@@ -118,6 +171,7 @@ string Logger::logPrefix( LogLevel level )
       case LogLevel_Debug:
          return ". debug: ";
       default:
+         write( LogLevel_Error, "Unknown LogLevel: %d", level );
          return " ????? : ";
    }
 }
