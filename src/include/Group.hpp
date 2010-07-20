@@ -1,9 +1,9 @@
 /*
- * Group.h
+ * Group.hpp
  */
 
-#ifndef GROUP_H_
-#define GROUP_H_
+#ifndef GROUP_HPP_
+#define GROUP_HPP_
 
 #include <X11/Xlib.h>
 #include <string>
@@ -27,4 +27,4 @@ class Group
       void runLayout( string ); 
 };
 
-#endif
+#endif /* GROUP_HPP_ */

@@ -1,9 +1,9 @@
 /*
- * SmartWindow.h
+ * SmartWindow.hpp
  */
 
-#ifndef SMARTWINDOW_H_
-#define SMARTWINDOW_H_
+#ifndef SMARTWINDOW_HPP_
+#define SMARTWINDOW_HPP_
 
 #include <X11/Xlib.h>
 #include "Frame.hpp"
@@ -22,4 +22,4 @@ class SmartWindow
       Frame* _frame;
 };
 
-#endif /* SMARTWINDOW_H_ */
+#endif /* SMARTWINDOW_HPP_ */

@@ -1,9 +1,9 @@
 /*
- * Logger.h
+ * Logger.hpp
  */
 
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#ifndef LOGGER_HPP_
+#define LOGGER_HPP_
 
 #include <string>
 #include <fstream>
@@ -39,4 +39,4 @@ class Logger
      LogLevel _maxLogLevel;
 };
 
-#endif
+#endif /* LOGGER_HPP_ */

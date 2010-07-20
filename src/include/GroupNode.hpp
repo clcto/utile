@@ -1,9 +1,9 @@
 /*
- * GroupNode.h
+ * GroupNode.hpp
  */
 
-#ifndef GROUP_NODE_H_
-#define GROUP_NODE_H_
+#ifndef GROUP_NODE_HPP_
+#define GROUP_NODE_HPP_
 
 #include <X11/Xlib.h>
 #include "Frame.hpp"
@@ -33,4 +33,4 @@ class GroupNode
       Group*  _group;
 };
 
-#endif /* GROUP_NODE_H_ */
+#endif /* GROUP_NODE_HPP_ */

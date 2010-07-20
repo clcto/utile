@@ -1,9 +1,9 @@
 /*
- * utile.h
+ * utile.hpp
  */
 
-#ifndef UTILE_H_
-#define UTILE_H_
+#ifndef UTILE_HPP_
+#define UTILE_HPP_
 
 #include <X11/Xlib.h>
 #include <iostream>
@@ -59,4 +59,4 @@ vector<string> tokenize( const string& input,
 string trim( const string& input,
              const string& delims = " \n\t" );
 
-#endif
+#endif /* UTILE_HPP_ */
