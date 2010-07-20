@@ -1,9 +1,9 @@
 /*
- * Frame.h
+ * Frame.hpp
  */
 
-#ifndef FRAME_H_
-#define FRAME_H_
+#ifndef FRAME_HPP_
+#define FRAME_HPP_
 
 #include <X11/Xlib.h>
 #include <vector>
@@ -16,23 +16,22 @@ class SmartWindow;
 
 class Frame
 {
-	public:
-      Frame( unsigned int x, unsigned int y, 
-             unsigned int w, unsigned int h );
+   public:
+      Frame( uint x, uint y, uint w, uint h );
       void addWindow( Window newWin );
-      void moveResize( unsigned int x, unsigned int y,
-                       unsigned int w, unsigned int h );
-      unsigned int width();
-      unsigned int height();
-      unsigned int xLoc();
-      unsigned int yLoc();
+      void moveResize( uint x, uint y,
+                       uint w, uint h );
+      uint width();
+      uint height();
+      uint xLoc();
+      uint yLoc();
 
-	private:
+   private:
       vector<SmartWindow> _windows;
       unsigned char       _curWindow;
       Window              _background;
-		unsigned int        _xLoc,  _yLoc;
-		unsigned int        _width, _height;
+      uint                _xLoc,  _yLoc;
+      uint                _width, _height;
 };
 
-#endif /* FRAME_H_ */
+#endif /* FRAME_HPP_ */
