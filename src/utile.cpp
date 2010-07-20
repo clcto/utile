@@ -9,6 +9,7 @@
 #include "GroupNode.hpp"
 #include "Group.hpp"
 #include "utile.hpp"
+#include "eventnames.h"
 
 using namespace std;
 
@@ -65,8 +66,8 @@ int utile::run()
    {
       XNextEvent( display, &event );
 
-      log.write( LogLevel_Debug, 
-                   "Received Event: %d" );
+      log.write( LogLevel_Debug, "Received Event: %s", 
+                 event_str[ event.type ].c_str() );
 
       switch( event.type )
       {

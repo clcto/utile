@@ -5,7 +5,9 @@
  * From the Xlib Programming Manual
  */
 
-static char* event_str[] = 
+#include <string>
+
+static std::string event_str[] = 
 {
 /* 00-03 */ "", "", "KeyPress", "KeyRelease",
 /* 04,05 */ "ButtonPress", "ButtonRelease",

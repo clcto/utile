@@ -32,7 +32,7 @@ class Logger
       void setLogLevel( LogLevel );
    
    private:
-     static string logPrefix( LogLevel level );
+     string logPrefix( LogLevel level );
      void write( LogLevel, string, va_list );
 
      ofstream _logFile;
