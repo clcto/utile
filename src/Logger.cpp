@@ -56,15 +56,44 @@ bool Logger::open( LogLevel level )
       return true;
 }
 
-void Logger::write( LogLevel level, string message )
+void Logger::write( LogLevel level, string format, ... )
 {
-   if( level <= _maxLogLevel && _logFile.is_open() )
+      // get the variadic variables
+   va_list ap;
+   va_start( ap, format );
+   
+   format += '\n';
+
+   write( level, format, ap );
+
+   va_end( ap );
+}
+
+void Logger::write( LogLevel level,
+                    string format,
+                    va_list ap )
+{
+   if( level <= _maxLogLevel )
    {
-      _logFile << logPrefix( level ) << message << '\n';
-      _logFile.flush();
+      char* formatted;
+      int size = vasprintf( &formatted, format.c_str(), ap );
+
+      if( size > 0 )
+      {
+         string message = logPrefix( level );
+         message += formatted;
+
+         if( _logFile.is_open() )
+         {
+            _logFile << message;
+            _logFile.flush();
+         }
+         else
+            cerr << message;
+
+         free( formatted );
+      }
    }
-   else if( level < _maxLogLevel )
-      cerr << logPrefix( level ) << message << '\n';
 }
 
 void Logger::setLogLevel( LogLevel level )

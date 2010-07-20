@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include <stdarg.h>
 
 using namespace std;
 
@@ -27,11 +28,12 @@ class Logger
       Logger();
       ~Logger();
       bool open( LogLevel = LogLevel_Debug );
-      void write( LogLevel, string );
+      void write( LogLevel, string, ... );
       void setLogLevel( LogLevel );
    
    private:
      static string logPrefix( LogLevel level );
+     void write( LogLevel, string, va_list );
 
      ofstream _logFile;
      LogLevel _maxLogLevel;

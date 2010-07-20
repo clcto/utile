@@ -64,16 +64,18 @@ int utile::run()
    for( ;; )
    {
       XNextEvent( display, &event );
+
+      log.write( LogLevel_Debug, 
+                   "Received Event: %d" );
+
       switch( event.type )
       {
          case MapRequest:
-            log.write( LogLevel_Trace, "Received MapRequest" );
             g.getCur()->addWindow( event.xmaprequest.window ); 
             //Global::curGroupNode->addWindow( 
             //                    event.xmaprequest.window );
             break;
          case KeyPress:
-            log.write( LogLevel_Trace, "Received KeyPress" );
             processKeyPress( event.xkey );
             break;
             
@@ -195,10 +197,6 @@ void utile::processKeyPress( const XKeyEvent& ev )
       commands.erase( strCmd[0] );
    }
 }
-
-
-
-
 
 
 /* GLOBAL STRING FUNCTIONS ============= */
