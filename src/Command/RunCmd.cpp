@@ -22,6 +22,7 @@ void RunCmd::execute( vector<string> params )
    utile::log.write( LogLevel_Trace, "Executing run command" );
    if( !utile::launcher.empty() )
    {
+      utile::log.write( LogLevel_Trace, "launcher not empty" );
       string command;
       
       command  = "exec `print-path | ";

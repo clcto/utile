@@ -25,7 +25,7 @@ Frame::Frame( unsigned int x, unsigned int y,
    _yLoc( y ),
    _width( w ),
    _height( h )
-{/*{{{*/
+{
    XSetWindowAttributes attr;
    attr.background_pixel = BlackPixel( utile::display, 0 );
    attr.border_pixel     = WhitePixel( utile::display, 0 );
@@ -40,7 +40,7 @@ Frame::Frame( unsigned int x, unsigned int y,
                     InputOutput, CopyFromParent,
                     CWBackPixel | CWBorderPixel, &attr );
    XMapWindow( utile::display, _background );
-}/*}}}*/
+}
 
 /*
  * adds a window to the frame
@@ -48,7 +48,7 @@ Frame::Frame( unsigned int x, unsigned int y,
  * newWin: window to add
  */
 void Frame::addWindow( Window newWin )
-{ /*{{{*/
+{ 
    unsigned char bw = 1; //Global::config.borderWidth();
 
    XReparentWindow( utile::display, newWin, 
@@ -61,7 +61,7 @@ void Frame::addWindow( Window newWin )
 
    _windows.push_back( sw );
    _curWindow = _windows.size() - 1;
-} /*}}}*/
+} 
 
 void Frame::moveResize( unsigned int x, unsigned int y,
                         unsigned int w, unsigned int h )

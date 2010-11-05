@@ -14,15 +14,15 @@ GroupNode::GroupNode( Group* g, Window r,
               unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h,
               GroupNode* p, Frame* f)
-{/*{{{*/
+{
    init( g, r, x, y, w, h, p, f );
-}/*}}}*/
+}
 
 void GroupNode::init( Group* g, Window r, 
                   unsigned int x, unsigned int y, 
                   unsigned int w, unsigned int h,
                   GroupNode* p, Frame* f)
-{/*{{{*/
+{
    // copy data
    _group   = g;
    _parent = p;
@@ -36,11 +36,11 @@ void GroupNode::init( Group* g, Window r,
 
    _children[0] = NULL;
    _children[1] = NULL;
-}/*}}}*/
+}
 
 
 GroupNode* GroupNode::splitHorizontal()
-{/*{{{*/
+{
    int w  = _frame->width();
    int h  = _frame->height();
    int x  = _frame->xLoc();
@@ -51,15 +51,15 @@ GroupNode* GroupNode::splitHorizontal()
    _bSplitVertical = 0;
    _frame = NULL;
    return _children[0];
-}/*}}}*/
+}
 
 GroupNode* GroupNode::splitVertical()
-{/*{{{*/
+{
    return NULL;
-}/*}}}*/
+}
 
 void GroupNode::addWindow( Window w )
-{/*{{{*/
+{
    if( _frame )
       _frame->addWindow( w );
-}/*}}}*/
+}

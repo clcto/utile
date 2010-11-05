@@ -9,7 +9,7 @@
 #include "GroupNode.hpp"
 #include "Group.hpp"
 #include "utile.hpp"
-#include "eventnames.h"
+#include "eventnames.hpp"
 
 using namespace std;
 
