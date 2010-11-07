@@ -37,4 +37,18 @@ class RunCmd : public Command
       void execute( vector<string> args );   
 };
 
+class QuitCmd : public Command
+{
+   public:
+      QuitCmd();
+      void execute( vector<string> args );   
+};
+
+class HSplitCmd : public Command
+{
+   public:
+      HSplitCmd();
+      void execute( vector<string> args );   
+};
+
 #endif // COMMANDS_HPP_

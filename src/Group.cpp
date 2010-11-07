@@ -8,7 +8,6 @@
  */
 
 #include "Group.hpp"
-#include "utile.hpp"
 
 /*
  * Constructor, creates the group
@@ -23,7 +22,7 @@ Group::Group( Window root, string layoutname ):
    unsigned int height = DisplayHeight( utile::display, 0 );
 
    _rootNode = new GroupNode( this, _rootWindow, 
-                       0, 0, width, height );
+                       0, 0, width, height);
    _curNode = _rootNode;
 }
 
@@ -36,6 +35,7 @@ void Group::runLayout( string layoutname )
    
 }
 
+#if 0
 /*
  * change the current GroupNode
  */
@@ -43,6 +43,7 @@ void Group::setCur( GroupNode* n )
 {
    _curNode = n;
 }
+#endif
 
 /*
  * returns the current GroupNode
@@ -50,4 +51,17 @@ void Group::setCur( GroupNode* n )
 GroupNode* Group::getCur()
 {
    return _curNode;
+}
+
+void Group::split( Split s )
+{
+   switch( s )
+   {
+      case Split_Horizontal:
+         _curNode = _curNode->splitHorizontal();
+         break;
+      case Split_Vertical:
+         _curNode = _curNode->splitVertical();
+         break;
+   }
 }

@@ -21,6 +21,7 @@ Logger   utile::log;
 map< string, Command* >    utile::commands;
 map< KeyCombo, vector<string> >  utile::bindings;
 map< string, unsigned int> utile::masks;
+Group* utile::g;
 
 
 int main( int argc, char** argv )
@@ -56,7 +57,7 @@ int utile::run()
 
    readConfig();
 
-   Group g( utile::root );
+   g = new Group( utile::root );
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask );
@@ -72,7 +73,7 @@ int utile::run()
       switch( event.type )
       {
          case MapRequest:
-            g.getCur()->addWindow( event.xmaprequest.window ); 
+            g->getCur()->addWindow( event.xmaprequest.window ); 
             //Global::curGroupNode->addWindow( 
             //                    event.xmaprequest.window );
             break;
@@ -87,10 +88,12 @@ int utile::run()
 void utile::initCommands()
 {
    log.write( LogLevel_Trace, "Initializing commands" );
-   commands[ "mod" ]     = new ModCmd();
+   commands[ "mod" ]      = new ModCmd();
    commands[ "bind" ]     = new BindCmd();
    commands[ "launcher" ] = new LauncherCmd();
    commands[ "run" ]      = new RunCmd();
+   commands[ "quit" ]     = new QuitCmd();
+   commands[ "hsplit" ]   = new HSplitCmd();
 }
 
 void utile::initMasks()
@@ -197,6 +200,11 @@ void utile::processKeyPress( const XKeyEvent& ev )
          // remove invalid commands
       commands.erase( strCmd[0] );
    }
+}
+
+void utile::split( Split s, float percent )
+{
+   g->split( s );
 }
 
 

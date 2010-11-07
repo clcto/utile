@@ -15,6 +15,10 @@
 #include "Command.hpp"
 #include "Commands.hpp"
 #include "Logger.hpp"
+#include "Group.hpp"
+#include "Split.hpp"
+
+class Group;
 
 using namespace std;
 
@@ -30,6 +34,7 @@ class utile
 {
    public:
       static int run();
+      static void split( Split s, float size = 0.5 );
 
 
       static Display *display;
@@ -39,6 +44,7 @@ class utile
       static map< KeyCombo, vector<string> > bindings;
       static map< string, unsigned int> masks;
       static Logger log;
+      static Group* g;
 
    private:
       static void initCommands();
@@ -46,7 +52,7 @@ class utile
       static void readConfig();
       static void parseFile( ifstream& );
       static void processKeyPress( const XKeyEvent& );
-
+      
 };
 
 vector<string> tokenize( const string& input,

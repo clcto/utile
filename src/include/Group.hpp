@@ -9,6 +9,8 @@
 #include <string>
 
 #include "GroupNode.hpp"
+#include "utile.hpp"
+#include "Split.hpp"
 
 using namespace std;
 
@@ -16,8 +18,8 @@ class Group
 {
    public:
       Group( Window root, string layoutname = "default" );
-      void setCur( GroupNode* );
       GroupNode* getCur();
+      void split( Split s );
 
    private:
       Window     _rootWindow;
