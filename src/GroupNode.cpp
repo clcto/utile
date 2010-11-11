@@ -63,3 +63,12 @@ void GroupNode::addWindow( Window w )
    if( _frame )
       _frame->addWindow( w );
 }
+
+bool GroupNode::close()
+{
+   utile::log.write( LogLevel_Trace, "GroupNode::close()" );
+   if( _frame )
+      return _frame->close();
+   else
+      return false;
+}

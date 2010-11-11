@@ -28,3 +28,18 @@ Window SmartWindow::getXWindow()
 {
    return _window;
 }
+
+void SmartWindow::close()
+{
+   utile::log.write( LogLevel_Trace, "SmartWindow::close()" );
+   XEvent delEv;
+   delEv.type = ClientMessage;
+   delEv.xclient.window = _window;
+   delEv.xclient.message_type = 
+      XInternAtom( utile::display, "WM_PROTOCOLS", True );
+   delEv.xclient.format = 32;
+   delEv.xclient.data.l[0] = 
+      XInternAtom( utile::display, "WM_DELETE_WINDOW", True );
+   delEv.xclient.data.l[1] = CurrentTime;
+   XSendEvent( utile::display, _window, False, NoEventMask, &delEv );
+}

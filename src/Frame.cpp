@@ -102,3 +102,20 @@ unsigned int Frame::yLoc()
 {
    return _yLoc;
 }
+
+bool Frame::close()
+{
+   utile::log.write( LogLevel_Trace, "Frame::close()\ncur: %d size: %d", _curWindow, _windows.size() );
+   if( _curWindow >= 0 && _curWindow < _windows.size() )
+   {
+      _windows[ _curWindow ].close();
+      return false;
+   }
+   else
+   {
+      // close the frame itself and return true
+
+      // temporary
+      return false;
+   }
+}

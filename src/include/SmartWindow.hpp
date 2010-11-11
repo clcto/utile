@@ -16,6 +16,7 @@ class SmartWindow
       SmartWindow( Window& w, Frame* const f = NULL );
       void moveTo( Frame *f );
       Window getXWindow();
+      void close();
 
 	private:
       Window _window;

@@ -35,6 +35,7 @@ class utile
    public:
       static int run();
       static void split( Split s, float size = 0.5 );
+      static void close();
 
 
       static Display *display;

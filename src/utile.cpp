@@ -94,6 +94,7 @@ void utile::initCommands()
    commands[ "run" ]      = new RunCmd();
    commands[ "quit" ]     = new QuitCmd();
    commands[ "hsplit" ]   = new HSplitCmd();
+   commands[ "close" ]    = new CloseCmd();
 }
 
 void utile::initMasks()
@@ -205,6 +206,12 @@ void utile::processKeyPress( const XKeyEvent& ev )
 void utile::split( Split s, float percent )
 {
    g->split( s );
+}
+
+void utile::close()
+{
+   utile::log.write( LogLevel_Trace, "utile::close()" );
+   g->close();
 }
 
 
