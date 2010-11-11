@@ -20,6 +20,7 @@ class Group
       Group( Window root, string layoutname = "default" );
       GroupNode* getCur();
       void split( Split s );
+      void close();
 
    private:
       Window     _rootWindow;

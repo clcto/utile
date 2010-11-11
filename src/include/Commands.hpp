@@ -51,4 +51,11 @@ class HSplitCmd : public Command
       void execute( vector<string> args );   
 };
 
+class CloseCmd : public Command
+{
+   public:
+      CloseCmd();
+      void execute( vector<string> args );   
+};
+
 #endif // COMMANDS_HPP_

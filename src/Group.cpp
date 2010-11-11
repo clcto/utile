@@ -65,3 +65,9 @@ void Group::split( Split s )
          break;
    }
 }
+
+void Group::close()
+{
+   utile::log.write( LogLevel_Trace, "Group::close()" );
+   _curNode->close();
+}

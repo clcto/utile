@@ -21,6 +21,8 @@ class Frame
       void addWindow( Window newWin );
       void moveResize( uint x, uint y,
                        uint w, uint h );
+      bool close();
+
       uint width();
       uint height();
       uint xLoc();

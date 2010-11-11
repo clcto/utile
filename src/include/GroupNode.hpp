@@ -23,6 +23,7 @@ class GroupNode
       void init( Group*,Window root, unsigned int, 
                  unsigned int, unsigned int, unsigned int,
                  GroupNode* parent = NULL, Frame* frame = NULL );
+      bool close();
 
    private:
       GroupNode* _children[2];
