@@ -20,7 +20,24 @@ RunCmd::RunCmd()
 void RunCmd::execute( vector<string> params )
 {
    utile::log.write( LogLevel_Trace, "Executing run command" );
-   if( !utile::launcher.empty() )
+
+   if( params.size() > 1 )
+   {
+      string cmd = "";
+      
+      for( uint i = 1; i < params.size(); ++i )
+      {
+         cmd += params[i];
+         cmd += " ";
+      }
+
+      cmd += "&";
+
+      utile::log.write( LogLevel_Trace, "system( %s )", cmd.c_str() );
+      system( cmd.c_str() );
+   }
+
+   else if( !utile::launcher.empty() )
    {
       utile::log.write( LogLevel_Trace, "launcher not empty" );
       string command;
