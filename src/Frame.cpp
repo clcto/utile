@@ -109,6 +109,8 @@ bool Frame::close()
    if( _curWindow >= 0 && _curWindow < _windows.size() )
    {
       _windows[ _curWindow ].close();
+      _windows.erase( _windows.begin() + _curWindow );
+      --_curWindow;
       return false;
    }
    else
