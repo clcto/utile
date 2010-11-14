@@ -72,3 +72,11 @@ bool GroupNode::close()
    else
       return false;
 }
+
+void GroupNode::remove( Window win )
+{
+   utile::log.write( LogLevel_Trace, "GroupNode::remove( %d )",
+                     win );
+   if( _frame )
+      _frame->remove( win );
+}

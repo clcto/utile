@@ -18,6 +18,8 @@ class SmartWindow
       Window getXWindow();
       void close();
 
+      bool operator==( Window w );
+
 	private:
       Window _window;
       Frame* _frame;

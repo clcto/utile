@@ -53,6 +53,7 @@ class utile
       static void readConfig();
       static void parseFile( ifstream& );
       static void processKeyPress( const XKeyEvent& );
+      static void remove( Window w );
       
 };
 

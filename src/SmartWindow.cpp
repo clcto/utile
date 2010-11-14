@@ -43,3 +43,8 @@ void SmartWindow::close()
    delEv.xclient.data.l[1] = CurrentTime;
    XSendEvent( utile::display, _window, False, NoEventMask, &delEv );
 }
+
+bool SmartWindow::operator==( Window w )
+{
+   return _window == w;
+}

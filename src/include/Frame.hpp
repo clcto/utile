@@ -28,6 +28,8 @@ class Frame
       uint xLoc();
       uint yLoc();
 
+      void remove( Window w );
+
    private:
       vector<SmartWindow> _windows;
       unsigned char       _curWindow;

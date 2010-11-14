@@ -60,7 +60,7 @@ int utile::run()
    g = new Group( utile::root );
 
    XSelectInput( display, utile::root, 
-                 SubstructureRedirectMask );
+                 SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask );
 
    XEvent event;
    for( ;; )
@@ -74,13 +74,13 @@ int utile::run()
       {
          case MapRequest:
             g->getCur()->addWindow( event.xmaprequest.window ); 
-            //Global::curGroupNode->addWindow( 
-            //                    event.xmaprequest.window );
             break;
          case KeyPress:
             processKeyPress( event.xkey );
             break;
-            
+         case UnmapNotify:
+            remove( event.xunmap.window );
+            break;
       }
    }
 }
@@ -214,6 +214,10 @@ void utile::close()
    g->close();
 }
 
+void utile::remove( Window win )
+{
+   g->getCur()->remove( win );
+}
 
 /* GLOBAL STRING FUNCTIONS ============= */
 

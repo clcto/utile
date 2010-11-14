@@ -24,6 +24,7 @@ class GroupNode
                  unsigned int, unsigned int, unsigned int,
                  GroupNode* parent = NULL, Frame* frame = NULL );
       bool close();
+      void remove( Window w );
 
    private:
       GroupNode* _children[2];

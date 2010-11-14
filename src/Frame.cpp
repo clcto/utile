@@ -40,6 +40,7 @@ Frame::Frame( unsigned int x, unsigned int y,
                     InputOutput, CopyFromParent,
                     CWBackPixel | CWBorderPixel, &attr );
    XMapWindow( utile::display, _background );
+   XSelectInput( utile::display, _background, SubstructureRedirectMask );
 }
 
 /*
@@ -50,6 +51,9 @@ Frame::Frame( unsigned int x, unsigned int y,
 void Frame::addWindow( Window newWin )
 { 
    unsigned char bw = 1; //Global::config.borderWidth();
+
+   XSelectInput( utile::display, newWin,
+      StructureNotifyMask );
 
    XReparentWindow( utile::display, newWin, 
                     _background, 0, 0 );
@@ -119,5 +123,21 @@ bool Frame::close()
 
       // temporary
       return false;
+   }
+}
+
+void Frame::remove( Window win )
+{
+   utile::log.write( LogLevel_Trace, "Frame::remove( %d )",
+                     win );
+
+   for( vector<SmartWindow>::iterator it = _windows.begin();
+        it < _windows.end(); ++it )
+   {
+      if( (*it) == win )
+      {
+         _windows.erase( it );
+         --_curWindow;
+      }
    }
 }
