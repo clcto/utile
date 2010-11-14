@@ -44,10 +44,10 @@ class QuitCmd : public Command
       void execute( vector<string> args );   
 };
 
-class HSplitCmd : public Command
+class SplitCmd : public Command
 {
    public:
-      HSplitCmd();
+      SplitCmd();
       void execute( vector<string> args );   
 };
 
