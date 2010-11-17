@@ -63,3 +63,10 @@ void Group::close()
    utile::log.write( LogLevel_Trace, "Group::close()" );
    _curNode->close();
 }
+
+void Group::selectRight()
+{
+   GroupNode* tmp = _curNode->right();
+   if( tmp )
+      _curNode = tmp;
+}

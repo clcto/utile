@@ -21,6 +21,7 @@ class Group
       GroupNode* getCur();
       void split( Split s );
       void close();
+      void selectRight();
 
    private:
       Window     _rootWindow;

@@ -125,4 +125,5 @@ GroupNode* GroupNode::right()
             "GroupNode::right(): caught an unexpected "
             "value in switch (%d)", _parent->_split );
          return NULL;
+   }
 }
