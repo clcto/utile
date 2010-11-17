@@ -80,3 +80,28 @@ void GroupNode::remove( Window win )
    if( _frame )
       _frame->remove( win );
 }
+
+GroupNode* GroupNode::right()
+{
+   // this is not quite right
+   // what do we do if we iterate up the
+   //    tree and there is no "right"
+   if( !_parent )
+      return this; // this will be bad...
+
+   switch( _parent._split )
+   {
+      case Split_Vertical:
+         return _parent.right();
+      case Split_Horizontal:
+         if( this == _parent._children[0] )
+            return _parent._children[1];
+         else
+            return _parent.right();
+      default:
+         utile::log.write( LogLevel_Error,
+            "GroupNode::right(): caught an unexpected "
+            "value in switch (%d)", _parent._split );
+         return NULL;
+   }
+}
