@@ -60,6 +60,8 @@ int utile::run()
    g = new Group( utile::root );
    g->split( Split_Horizontal );
    g->selectRight();
+   g->selectRight();
+
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask );

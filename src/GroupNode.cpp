@@ -109,7 +109,7 @@ GroupNode* GroupNode::right()
    // what do we do if we iterate up the
    //    tree and there is no "right"
    if( !_parent )
-      return this; // this will be bad...
+      return NULL;
 
    switch( _parent->_split )
    {
