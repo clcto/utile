@@ -93,7 +93,7 @@ void utile::initCommands()
    commands[ "launcher" ] = new LauncherCmd();
    commands[ "run" ]      = new RunCmd();
    commands[ "quit" ]     = new QuitCmd();
-   commands[ "hsplit" ]   = new HSplitCmd();
+   commands[ "split" ]    = new SplitCmd();
    commands[ "close" ]    = new CloseCmd();
 }
 
@@ -181,7 +181,6 @@ bool KeyCombo::operator< ( const KeyCombo& kc ) const
       return modifiers < kc.modifiers;
 }
 
-
 void utile::processKeyPress( const XKeyEvent& ev )
 {
    KeyCombo kc;
@@ -214,6 +213,7 @@ void utile::close()
    g->close();
 }
 
+// modify this! g->remove( win )
 void utile::remove( Window win )
 {
    g->getCur()->remove( win );

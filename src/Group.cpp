@@ -55,15 +55,7 @@ GroupNode* Group::getCur()
 
 void Group::split( Split s )
 {
-   switch( s )
-   {
-      case Split_Horizontal:
-         _curNode = _curNode->splitHorizontal();
-         break;
-      case Split_Vertical:
-         _curNode = _curNode->splitVertical();
-         break;
-   }
+   _curNode = _curNode->split( s );
 }
 
 void Group::close()

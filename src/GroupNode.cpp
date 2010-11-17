@@ -39,23 +39,45 @@ void GroupNode::init( Group* g, Window r,
 }
 
 
-GroupNode* GroupNode::splitHorizontal()
+GroupNode* GroupNode::split( Split s )
 {
+   if( _children[0] || _children[1] )
+   {
+      utile::log.write( LogLevel_Error,
+         "Trying to split a group that is already "
+         "split." );
+      return this;
+   }
+
    int w  = _frame->width();
    int h  = _frame->height();
    int x  = _frame->xLoc();
    int y  = _frame->yLoc();
 
-   _children[0] = new GroupNode( _group, _root, x, y, w/2, h, this, _frame );
-   _children[1] = new GroupNode( _group, _root, x+w/2, y, w/2, h, this );
-   _bSplitVertical = 0;
+   switch( s )
+   {
+      case Split_Horizontal:
+         _children[0] = 
+            new GroupNode( _group, _root, x, y, 
+                           w/2, h, this, _frame );
+         _children[1] =
+            new GroupNode( _group, _root, x+w/2, 
+                           y, w/2, h, this );
+            break;
+
+      case Split_Vertical:
+         _children[0] = 
+            new GroupNode( _group, _root, x, y, 
+                           w, h/2, this, _frame );
+         _children[1] =
+            new GroupNode( _group, _root, x, 
+                           y+h/2, w, h/2, this );
+            break;
+   }
+         
+   _split = s;
    _frame = NULL;
    return _children[0];
-}
-
-GroupNode* GroupNode::splitVertical()
-{
-   return NULL;
 }
 
 void GroupNode::addWindow( Window w )
@@ -89,19 +111,18 @@ GroupNode* GroupNode::right()
    if( !_parent )
       return this; // this will be bad...
 
-   switch( _parent._split )
+   switch( _parent->_split )
    {
       case Split_Vertical:
-         return _parent.right();
+         return _parent->right();
       case Split_Horizontal:
-         if( this == _parent._children[0] )
-            return _parent._children[1];
+         if( this == _parent->_children[0] )
+            return _parent->_children[1];
          else
-            return _parent.right();
+            return _parent->right();
       default:
          utile::log.write( LogLevel_Error,
             "GroupNode::right(): caught an unexpected "
-            "value in switch (%d)", _parent._split );
+            "value in switch (%d)", _parent->_split );
          return NULL;
-   }
 }
