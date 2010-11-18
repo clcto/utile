@@ -10,6 +10,7 @@
 #include "Group.hpp"
 #include "utile.hpp"
 #include "eventnames.hpp"
+#include "Direction.hpp"
 
 using namespace std;
 

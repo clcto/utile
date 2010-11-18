@@ -11,6 +11,7 @@
 #include "GroupNode.hpp"
 #include "utile.hpp"
 #include "Split.hpp"
+#include "Direction.hpp"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ class Group
       GroupNode* getCur();
       void split( Split s );
       void close();
-      void selectRight();
+      void select( Direction );
 
    private:
       Window     _rootWindow;

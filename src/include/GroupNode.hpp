@@ -8,6 +8,7 @@
 #include <X11/Xlib.h>
 #include "Frame.hpp"
 #include "Split.hpp"
+#include "Direction.hpp"
 
 class Group;
 
@@ -26,13 +27,15 @@ class GroupNode
       bool close();
       void remove( Window w );
 
-      GroupNode* right();
-      GroupNode* left();
-      GroupNode* up();
-      GroupNode* down();
-
+      GroupNode* getNode( Direction );
 
    private:
+
+      GroupNode* right();
+      GroupNode* left();
+      GroupNode* down();
+      GroupNode* up();
+
       GroupNode* _children[2];
       GroupNode* _parent;
       Split _split;

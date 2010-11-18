@@ -103,6 +103,21 @@ void GroupNode::remove( Window win )
       _frame->remove( win );
 }
 
+GroupNode* GroupNode::getNode( Direction d )
+{
+   switch( d )
+   {
+      case Direction_Right:
+         return right();
+      case Direction_Left:
+         return left();
+      case Direction_Down:
+         return down();
+      case Direction_Up:
+         return up;
+   }
+}
+
 GroupNode* GroupNode::right()
 {
    // this is not quite right

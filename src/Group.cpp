@@ -64,9 +64,9 @@ void Group::close()
    _curNode->close();
 }
 
-void Group::selectRight()
+void Group::select( Direction d )
 {
-   GroupNode* tmp = _curNode->right();
+   GroupNode* tmp = _curNode->getNode( d );
    if( tmp )
       _curNode = tmp;
 }
