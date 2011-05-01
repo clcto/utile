@@ -69,4 +69,6 @@ void Group::select( Direction d )
    GroupNode* tmp = _curNode->getNode( d );
    if( tmp )
       _curNode = tmp;
+
+   _curNode->fixLastAccess();
 }

@@ -59,9 +59,11 @@ int utile::run()
    readConfig();
 
    g = new Group( utile::root );
+   g->split( Split_Vertical );
+   g->split( Split_Vertical );
    g->split( Split_Horizontal );
-   g->selectRight();
-   g->selectRight();
+   g->select( Direction_Right );
+   g->select( Direction_Right );
 
 
    XSelectInput( display, utile::root, 

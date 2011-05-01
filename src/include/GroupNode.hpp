@@ -28,6 +28,7 @@ class GroupNode
       void remove( Window w );
 
       GroupNode* getNode( Direction );
+      void fixLastAccess();
 
    private:
 
@@ -36,12 +37,15 @@ class GroupNode
       GroupNode* down();
       GroupNode* up();
 
+      void fixLastAccess( GroupNode* );
+
       GroupNode* _children[2];
       GroupNode* _parent;
       Split _split;
       Frame* _frame;
       Window _root;
       Group*  _group;
+      int _lastAccess;
 };
 
 #endif /* GROUP_NODE_HPP_ */
