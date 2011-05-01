@@ -22,6 +22,7 @@ Logger   utile::log;
 map< string, Command* >    utile::commands;
 map< KeyCombo, vector<string> >  utile::bindings;
 map< string, unsigned int> utile::masks;
+map< string, XColor > utile::colors;
 Group* utile::g;
 
 
@@ -102,6 +103,8 @@ void utile::initCommands()
    commands[ "quit" ]     = new QuitCmd();
    commands[ "split" ]    = new SplitCmd();
    commands[ "close" ]    = new CloseCmd();
+   commands[ "color" ]    = new ColorCmd();
+   commands[ "border" ]   = new BorderCmd();
 }
 
 void utile::initMasks()

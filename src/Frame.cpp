@@ -27,8 +27,14 @@ Frame::Frame( unsigned int x, unsigned int y,
    _height( h )
 {
    XSetWindowAttributes attr;
+   XColor purple;
+   purple.red = 0xFFFF;
+   purple.blue = 0xFFFF;
+   purple.green = 0;
+   XAllocColor( utile::display, DefaultColormap( utile::display, 0 ), &purple );
    attr.background_pixel = BlackPixel( utile::display, 0 );
-   attr.border_pixel     = WhitePixel( utile::display, 0 );
+   //attr.border_pixel     = WhitePixel( utile::display, 0 );
+   attr.border_pixel = purple.pixel;
    
    unsigned char bw = 1; 
    _background = XCreateWindow( 

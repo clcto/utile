@@ -58,4 +58,17 @@ class CloseCmd : public Command
       void execute( vector<string> args );   
 };
 
+class ColorCmd : public Command
+{
+   public:
+      ColorCmd();
+      void execute( vector<string> args );   
+};
+
+class BorderCmd : public Command
+{
+   public:
+      BorderCmd();
+      void execute( vector<string> args );   
+};
 #endif // COMMANDS_HPP_
