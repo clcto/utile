@@ -44,6 +44,7 @@ class utile
       static map< string, Command* > commands;
       static map< KeyCombo, vector<string> > bindings;
       static map< string, unsigned int> masks;
+      static map< string, XColor > colors;
       static Logger log;
       static Group* g;
 
