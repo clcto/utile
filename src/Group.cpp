@@ -24,6 +24,7 @@ Group::Group( Window root, string layoutname ):
    _rootNode = new GroupNode( this, _rootWindow, 
                        0, 0, width, height);
    _curNode = _rootNode;
+   _curNode->setActive( true );
 }
 
 /*
@@ -66,9 +67,15 @@ void Group::close()
 
 void Group::select( Direction d )
 {
-   GroupNode* tmp = _curNode->getNode( d );
-   if( tmp )
-      _curNode = tmp;
 
-   _curNode->fixLastAccess();
+   utile::log.write( LogLevel_Debug, "trying to get next node" );
+   GroupNode* tmp = _curNode->getNode( d );
+   utile::log.write( LogLevel_Debug, "got node next to me" );
+   if( tmp )
+   {
+      utile::log.write( LogLevel_Debug, "and it is not null" );
+      _curNode->setActive( false );
+      _curNode = tmp;
+      _curNode->setActive( true );
+   }
 }

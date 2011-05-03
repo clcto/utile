@@ -13,6 +13,8 @@
 #include "Frame.hpp"
 #include "SmartWindow.hpp"
 
+XColor Frame::active_border;
+XColor Frame::inactive_border;
 /* 
  * creates a new frame with the information passed
  *
@@ -27,14 +29,8 @@ Frame::Frame( unsigned int x, unsigned int y,
    _height( h )
 {
    XSetWindowAttributes attr;
-   XColor purple;
-   purple.red = 0xFFFF;
-   purple.blue = 0xFFFF;
-   purple.green = 0;
-   XAllocColor( utile::display, DefaultColormap( utile::display, 0 ), &purple );
    attr.background_pixel = BlackPixel( utile::display, 0 );
-   //attr.border_pixel     = WhitePixel( utile::display, 0 );
-   attr.border_pixel = purple.pixel;
+   attr.border_pixel     = inactive_border.pixel;
    
    unsigned char bw = 1; 
    _background = XCreateWindow( 
@@ -47,6 +43,17 @@ Frame::Frame( unsigned int x, unsigned int y,
                     CWBackPixel | CWBorderPixel, &attr );
    XMapWindow( utile::display, _background );
    XSelectInput( utile::display, _background, SubstructureRedirectMask );
+}
+
+void Frame::setActive( bool active )
+{
+   XSetWindowAttributes attr;
+   if( active )
+      attr.border_pixel = active_border.pixel;
+   else
+      attr.border_pixel = inactive_border.pixel;
+
+   XChangeWindowAttributes( utile::display, _background, CWBorderPixel, &attr );
 }
 
 /*
@@ -146,4 +153,14 @@ void Frame::remove( Window win )
          --_curWindow;
       }
    }
+}
+
+void Frame::setActive( XColor c )
+{
+   active_border = c;
+}
+
+void Frame::setInactive( XColor c )
+{
+   inactive_border = c;
 }

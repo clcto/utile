@@ -24,7 +24,7 @@ void ColorCmd::execute( vector<string> params )
 
    if( params.size() >= 6 )
    {
-      unsigned long red = 0, green = 0, blue = 0;
+      unsigned short red = 0, green = 0, blue = 0;
       stringstream ss;
       if( params[1].compare( "hex" ) == 0 )
          ss.setf( ios::hex, ios::basefield );
@@ -66,8 +66,17 @@ void ColorCmd::execute( vector<string> params )
       c.red = red;
       c.green = green;
       c.blue = blue;
-      utile::colors[ params[6] ] = c;
+
+      XAllocColor( utile::display, DefaultColormap( utile::display, 0 ), &c );
+
+      utile::log.write( LogLevel_Debug, "%s: %d %d %d", params[5].c_str(),
+                        c.red,
+                        c.green,
+                        c.blue );
+      utile::colors[ params[5] ] = c;
    }
+   else
+      utile::log.write( LogLevel_Warning, "Too few arguments" );
 
 
 }

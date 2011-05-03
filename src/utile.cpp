@@ -60,12 +60,6 @@ int utile::run()
    readConfig();
 
    g = new Group( utile::root );
-   g->split( Split_Vertical );
-   g->split( Split_Vertical );
-   g->split( Split_Horizontal );
-   g->select( Direction_Right );
-   g->select( Direction_Right );
-
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask );
@@ -105,6 +99,7 @@ void utile::initCommands()
    commands[ "close" ]    = new CloseCmd();
    commands[ "color" ]    = new ColorCmd();
    commands[ "border" ]   = new BorderCmd();
+   commands[ "select" ]   = new SelectCmd();
 }
 
 void utile::initMasks()
@@ -227,6 +222,11 @@ void utile::close()
 void utile::remove( Window win )
 {
    g->getCur()->remove( win );
+}
+
+void utile::select( Direction d )
+{
+   g->select( d );
 }
 
 /* GLOBAL STRING FUNCTIONS ============= */

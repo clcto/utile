@@ -28,7 +28,7 @@ class GroupNode
       void remove( Window w );
 
       GroupNode* getNode( Direction );
-      void fixLastAccess();
+      void setActive( bool );
 
    private:
 
@@ -37,6 +37,7 @@ class GroupNode
       GroupNode* down();
       GroupNode* up();
 
+      void fixLastAccess();
       void fixLastAccess( GroupNode* );
 
       GroupNode* _children[2];

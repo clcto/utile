@@ -71,4 +71,11 @@ class BorderCmd : public Command
       BorderCmd();
       void execute( vector<string> args );   
 };
+
+class SelectCmd : public Command
+{
+   public:
+      SelectCmd();
+      void execute( vector<string> args );   
+};
 #endif // COMMANDS_HPP_

@@ -29,6 +29,10 @@ class Frame
       uint yLoc();
 
       void remove( Window w );
+      void setActive( bool );
+      
+      static void setInactive( XColor );
+      static void setActive( XColor );
 
    private:
       vector<SmartWindow> _windows;
@@ -36,6 +40,8 @@ class Frame
       Window              _background;
       uint                _xLoc,  _yLoc;
       uint                _width, _height;
+
+      static XColor inactive_border, active_border;
 };
 
 #endif /* FRAME_HPP_ */

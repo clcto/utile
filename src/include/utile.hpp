@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 
+#include "Direction.hpp"
 #include "Command.hpp"
 #include "Commands.hpp"
 #include "Logger.hpp"
@@ -36,6 +37,7 @@ class utile
       static int run();
       static void split( Split s, float size = 0.5 );
       static void close();
+      static void select( Direction );
 
 
       static Display *display;
