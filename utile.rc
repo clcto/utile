@@ -1,0 +1,20 @@
+launcher dmenu
+bind Mod4 h split h
+bind Mod4 v split v
+bind Mod4 j split
+bind Mod4 k split k
+bind Mod4 r run
+bind Mod4 1 run urxvtc
+bind Mod4 F12 quit
+
+bind Mod4 Left select left
+bind Mod4 Right select right
+bind Mod4 Up select up
+bind Mod4 Down select down
+
+color hex FFFF 1111 1111 red
+color hex AAAA AAAA AAAA gray
+
+border i red
+border a gray
+
