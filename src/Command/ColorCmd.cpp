@@ -11,28 +11,26 @@
 #include "Commands.hpp"
 #include "utile.hpp"
 
-using namespace std;
-
 ColorCmd::ColorCmd()
 {
    usage = "";
 }
 
-void ColorCmd::execute( vector<string> params )
+void ColorCmd::execute( const std::vector<std::string>& params )
 {
-   utile::log.write( LogLevel_Info, "Executing Color Cmd" );
+   utile::log.write( LogLevel::Info, "Executing Color Cmd" );
 
    if( params.size() >= 6 )
    {
       unsigned short red = 0, green = 0, blue = 0;
-      stringstream ss;
+      std::stringstream ss;
       if( params[1].compare( "hex" ) == 0 )
-         ss.setf( ios::hex, ios::basefield );
+         ss.setf( std::ios::hex, std::ios::basefield );
       else if( params[1].compare( "dec" ) == 0 )
-         ss.setf( ios::dec, ios::basefield );
+         ss.setf( std::ios::dec, std::ios::basefield );
       else
       {
-         utile::log.write( LogLevel_Warning, "Invalid base type '%s'", params[1].c_str() );
+         utile::log.write( LogLevel::Warning, "Invalid base type '%s'", params[1].c_str() );
          return;
       }
 
@@ -40,7 +38,7 @@ void ColorCmd::execute( vector<string> params )
       ss >> red;
       if( ss.fail() )
       {
-         utile::log.write( LogLevel_Warning, "Invalid Value '%s'", params[2].c_str() );
+         utile::log.write( LogLevel::Warning, "Invalid Value '%s'", params[2].c_str() );
          return;
       }
 
@@ -49,7 +47,7 @@ void ColorCmd::execute( vector<string> params )
       ss >> green;
       if( ss.fail() )
       {
-         utile::log.write( LogLevel_Warning, "Invalid Value '%s'", params[3].c_str() );
+         utile::log.write( LogLevel::Warning, "Invalid Value '%s'", params[3].c_str() );
          return;
       }
 
@@ -58,7 +56,7 @@ void ColorCmd::execute( vector<string> params )
       ss >> blue;
       if( ss.fail() )
       {
-         utile::log.write( LogLevel_Warning, "Invalid Value '%s'", params[4].c_str() );
+         utile::log.write( LogLevel::Warning, "Invalid Value '%s'", params[4].c_str() );
          return;
       }
 
@@ -69,14 +67,14 @@ void ColorCmd::execute( vector<string> params )
 
       XAllocColor( utile::display, DefaultColormap( utile::display, 0 ), &c );
 
-      utile::log.write( LogLevel_Debug, "%s: %d %d %d", params[5].c_str(),
+      utile::log.write( LogLevel::Debug, "%s: %d %d %d", params[5].c_str(),
                         c.red,
                         c.green,
                         c.blue );
       utile::colors[ params[5] ] = c;
    }
    else
-      utile::log.write( LogLevel_Warning, "Too few arguments" );
+      utile::log.write( LogLevel::Warning, "Too few arguments" );
 
 
 }

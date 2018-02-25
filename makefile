@@ -15,8 +15,10 @@ utile: $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $^ -o $@
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJECTS)
+	rm -rf $(OBJECTDIR)
+	rm utile

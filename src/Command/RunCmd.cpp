@@ -10,20 +10,18 @@
 #include "Commands.hpp"
 #include "utile.hpp"
 
-using namespace std;
-
 RunCmd::RunCmd()
 {
    usage = "";
 }
 
-void RunCmd::execute( vector<string> params )
+void RunCmd::execute( const std::vector<std::string>& params )
 {
-   utile::log.write( LogLevel_Trace, "Executing run command" );
+   utile::log.write( LogLevel::Trace, "Executing run command" );
 
    if( params.size() > 1 )
    {
-      string cmd = "";
+      std::string cmd = "";
       
       for( uint i = 1; i < params.size(); ++i )
       {
@@ -33,14 +31,14 @@ void RunCmd::execute( vector<string> params )
 
       cmd += "&";
 
-      utile::log.write( LogLevel_Trace, "system( %s )", cmd.c_str() );
+      utile::log.write( LogLevel::Trace, "system( %s )", cmd.c_str() );
       system( cmd.c_str() );
    }
 
    else if( !utile::launcher.empty() )
    {
-      utile::log.write( LogLevel_Trace, "launcher not empty" );
-      string command;
+      utile::log.write( LogLevel::Trace, "launcher not empty" );
+      std::string command;
       
       command  = "exec `print-path | ";
       command += utile::launcher;

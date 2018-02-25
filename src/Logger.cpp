@@ -4,13 +4,17 @@
  *   for messages to be ignored if they are
  *   at a lower level
  *
+ * 2018.02.25:
+ *   > modern c++ support
+ *   > memory safety
+ *
  * 2010.07.20:
  *   > opens a compiled in log file
  *   > writes formatted messages to file
  *   > if the log isn't opened and it is written to
  *     the message is logged to standard error
  *
- * Copyright (c) 2010
+ * Copyright (c) 2010-2018
  *   Carick Wienke <carick dot wienke at gmail dot com> 
  */
 
@@ -54,19 +58,19 @@ bool Logger::open( LogLevel level )
       // re-run the wm to view the old log file.
       // without this, the last log would be overwritten.
       // this is similar functionality to Xorg
-   string home = getenv( "HOME" );
+   std::string home = getenv( "HOME" );
 
-   string dir = home;
+   std::string dir = home;
    dir.append( "/.utile" );
 
    struct stat st;
    if( stat( dir.c_str(), &st ) != 0 )
       mkdir( dir.c_str(), 0777 );
 
-   string logbackup = dir;
+   std::string logbackup = dir;
    logbackup.append("/utile.log.old");
 
-   string log = dir;
+   std::string log = dir;
    log.append("/utile.log");
 
    rename( log.c_str(), logbackup.c_str() );
@@ -76,9 +80,10 @@ bool Logger::open( LogLevel level )
 
    if( !_logFile.is_open() )
    {
-      cerr << "Unable to open log file.\n"
-           << "What is typically logged will be"
-           << " output to standard error.\n";
+      std::cerr 
+        << "Unable to open log file.\n"
+        << "What is typically logged will be"
+        << " output to standard error.\n";
       return false;
    }
    else
@@ -93,14 +98,12 @@ bool Logger::open( LogLevel level )
  * params: the parameters for the format, 
  *         these are not checked at compile time
  */
-void Logger::write( LogLevel level, string format, ... )
+void Logger::write( LogLevel level, const std::string& format, ... )
 {
       // get the variadic variables
    va_list ap;
    va_start( ap, format );
    
-   format += '\n';
-
    write( level, format, ap );
 
       // close the va_list
@@ -124,7 +127,7 @@ void Logger::setLogLevel( LogLevel level )
  * a va_list instead of "..."
  */
 void Logger::write( LogLevel level,
-                    string format,
+                    const std::string& format,
                     va_list ap )
 {
    if( level <= _maxLogLevel )
@@ -134,16 +137,15 @@ void Logger::write( LogLevel level,
 
       if( size > 0 )
       {
-         string message = logPrefix( level );
+         auto message = logPrefix( level );
          message += formatted;
 
          if( _logFile.is_open() )
          {
-            _logFile << message;
-            _logFile.flush();
+            _logFile << message << std::endl;
          }
          else
-            cerr << message;
+            std::cerr << message << std::endl;
 
          free( formatted );
       }
@@ -154,24 +156,24 @@ void Logger::write( LogLevel level,
  * converts level into a prefix of the message to be
  * written into the log
  */
-string Logger::logPrefix( LogLevel level )
+std::string Logger::logPrefix( LogLevel level )
 {
    switch( level )
    {
-      case LogLevel_Fatal:
+      case LogLevel::Fatal:
          return "! fatal: ";
-      case LogLevel_Error:
+      case LogLevel::Error:
          return "* error: ";
-      case LogLevel_Warning:
+      case LogLevel::Warning:
          return "$  warn: ";
-      case LogLevel_Info:
+      case LogLevel::Info:
          return "+  info: ";
-      case LogLevel_Trace:
+      case LogLevel::Trace:
          return "= trace: ";
-      case LogLevel_Debug:
+      case LogLevel::Debug:
          return ". debug: ";
       default:
-         write( LogLevel_Error, "Unknown LogLevel: %d", level );
+         write( LogLevel::Error, "Unknown LogLevel: %d", level );
          return " ????? : ";
    }
 }

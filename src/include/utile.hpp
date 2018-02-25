@@ -2,26 +2,23 @@
  * utile.hpp
  */
 
-#ifndef UTILE_HPP_
-#define UTILE_HPP_
+#pragma once
+
+#include "Direction.hpp"
+#include "Logger.hpp"
+#include "Split.hpp"
 
 #include <X11/Xlib.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <map>
-
-#include "Direction.hpp"
-#include "Command.hpp"
-#include "Commands.hpp"
-#include "Logger.hpp"
-#include "Group.hpp"
-#include "Split.hpp"
+#include <memory>
 
 class Group;
-
-using namespace std;
+class Command;
 
 class KeyCombo
 {
@@ -37,37 +34,38 @@ class utile
       static int run();
       static void split( Split s, float size = 0.5 );
       static void close();
-      static void select( Direction );
+      static void select( Direction direction );
+      static void resize( Direction side, int pixels );
 
 
-      static Display *display;
-      static Window   root;
-      static string   launcher;
-      static map< string, Command* > commands;
-      static map< KeyCombo, vector<string> > bindings;
-      static map< string, unsigned int> masks;
-      static map< string, XColor > colors;
+      static Display* display;
+      static Window root;
+      static std::string launcher;
+      static std::map< std::string, std::unique_ptr<Command> > commands;
+      static std::map< KeyCombo, std::vector<std::string> > bindings;
+      static std::map< std::string, unsigned int> masks;
+      static std::map< std::string, XColor > colors;
       static Logger log;
-      static Group* g;
 
    private:
       static void initCommands();
       static void initMasks();
-      static void readConfig();
-      static void parseFile( ifstream& );
+      static bool readConfig();
+      static void parseFile( std::ifstream& );
       static void processKeyPress( const XKeyEvent& );
       static void remove( Window w );
+
+
+      static std::unique_ptr<Group> groups;
       
 };
 
-vector<string> tokenize( const string& input,
-                     const string& delimiters = " \n\t" );
+std::vector<std::string> tokenize( const std::string& input,
+                     const std::string& delimiters = " \n\t" );
 
 /*
  * returns a new string with the 
  * leading and following delim characters removed
  */
-string trim( const string& input,
-             const string& delims = " \n\t" );
-
-#endif /* UTILE_HPP_ */
+std::string trim( const std::string& input,
+             const std::string& delims = " \n\t" );

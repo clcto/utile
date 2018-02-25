@@ -10,15 +10,13 @@
 #include "Commands.hpp"
 #include "utile.hpp"
 
-using namespace std;
-
 QuitCmd::QuitCmd()
 {
    usage = "";
 }
 
-void QuitCmd::execute( vector<string> params )
+void QuitCmd::execute( const std::vector<std::string>& params )
 {
-   utile::log.write( LogLevel_Info, "Exitting" );
+   utile::log.write( LogLevel::Info, "Exitting" );
    exit(0);
 }

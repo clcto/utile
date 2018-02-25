@@ -1,42 +1,35 @@
 /*
  * GroupNode.cpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com>
  */
 
 #include <X11/Xlib.h>
 #include "Frame.hpp"
 #include "GroupNode.hpp"
 
-using namespace std;
+#include <exception>
 
 GroupNode::GroupNode(){}
 
-GroupNode::GroupNode( Group* g, Window r, 
+GroupNode::GroupNode( Group* group, Window root,
               unsigned int x, unsigned int y, 
               unsigned int w, unsigned int h,
-              GroupNode* p, Frame* f)
+              GroupNode* parent,
+              std::unique_ptr<Frame>&& frame ) :
+   _group( group ),
+   _root( root ),
+   _parent( parent ),
+   _frame( std::move( frame ) ),
+   _lastAccess( 0 )
 {
-   init( g, r, x, y, w, h, p, f );
-}
-
-void GroupNode::init( Group* g, Window r, 
-                  unsigned int x, unsigned int y, 
-                  unsigned int w, unsigned int h,
-                  GroupNode* p, Frame* f)
-{
-   // copy data
-   _group   = g;
-   _parent = p;
-   _frame  = f;
-   _root   = r;
-   _lastAccess = 0;
-
    if( !_frame )
-      _frame = new Frame( x, y, w, h );
+      _frame = std::make_unique<Frame>( x, y, w, h );
    else
       _frame->moveResize( x, y, w, h );
 
-   _children[0] = NULL;
-   _children[1] = NULL;
+   _children[0] = nullptr;
+   _children[1] = nullptr;
 }
 
 void GroupNode::setActive( bool active )
@@ -53,7 +46,7 @@ GroupNode* GroupNode::split( Split s )
 {
    if( _children[0] || _children[1] )
    {
-      utile::log.write( LogLevel_Error,
+      utile::log.write( LogLevel::Error,
          "Trying to split a group that is already "
          "split." );
       return this;
@@ -66,21 +59,21 @@ GroupNode* GroupNode::split( Split s )
 
    switch( s )
    {
-      case Split_Vertical:
+      case Split::Vertical:
          _children[0] = 
-            new GroupNode( _group, _root, x, y, 
-                           w/2, h, this, _frame );
+            std::make_unique<GroupNode>( _group, _root, x, y, 
+                           w/2, h, this, std::move( _frame ) );
          _children[1] =
-            new GroupNode( _group, _root, x+w/2, 
+            std::make_unique<GroupNode>( _group, _root, x+w/2, 
                            y, w/2, h, this );
             break;
 
-      case Split_Horizontal:
+      case Split::Horizontal:
          _children[0] = 
-            new GroupNode( _group, _root, x, y, 
-                           w, h/2, this, _frame );
+            std::make_unique<GroupNode>( _group, _root, x, y, 
+                           w, h/2, this, std::move( _frame ) );
          _children[1] =
-            new GroupNode( _group, _root, x, 
+            std::make_unique<GroupNode>( _group, _root, x, 
                            y+h/2, w, h/2, this );
             break;
    }
@@ -88,7 +81,7 @@ GroupNode* GroupNode::split( Split s )
    _split = s;
    _frame = NULL;
    _lastAccess = 0;
-   return _children[0];
+   return _children[0].get();
 }
 
 void GroupNode::addWindow( Window w )
@@ -99,7 +92,7 @@ void GroupNode::addWindow( Window w )
 
 bool GroupNode::close()
 {
-   utile::log.write( LogLevel_Trace, "GroupNode::close()" );
+   utile::log.write( LogLevel::Trace, "GroupNode::close()" );
    if( _frame )
       return _frame->close();
    else
@@ -108,7 +101,7 @@ bool GroupNode::close()
 
 void GroupNode::remove( Window win )
 {
-   utile::log.write( LogLevel_Trace, "GroupNode::remove( %d )",
+   utile::log.write( LogLevel::Trace, "GroupNode::remove( %d )",
                      win );
    if( _frame )
       _frame->remove( win );
@@ -119,17 +112,19 @@ GroupNode* GroupNode::getNode( Direction d )
    switch( d )
    {
       case Direction_Right:
-   utile::log.write( LogLevel_Debug, "right" );
+         utile::log.write( LogLevel::Debug, "right" );
          return right();
       case Direction_Left:
-   utile::log.write( LogLevel_Debug, "left" );
+         utile::log.write( LogLevel::Debug, "left" );
          return left();
       case Direction_Down:
-   utile::log.write( LogLevel_Debug, "down" );
+         utile::log.write( LogLevel::Debug, "down" );
          return down();
       case Direction_Up:
-   utile::log.write( LogLevel_Debug, "up" );
+         utile::log.write( LogLevel::Debug, "up" );
          return up();
+      default:
+         throw std::runtime_error( "Unexpected Direction" );
    }
 }
 
@@ -139,10 +134,10 @@ GroupNode* GroupNode::right()
    {
       switch( _split )
       {
-         case Split_Horizontal:
-            return _children[ _lastAccess ];
-         case Split_Vertical:
-            return _children[0];
+         case Split::Horizontal:
+            return _children[ _lastAccess ].get();
+         case Split::Vertical:
+            return _children[0].get();
       }
    }
 
@@ -150,17 +145,17 @@ GroupNode* GroupNode::right()
 
    switch( _parent->_split )
    {
-      case Split_Horizontal:
+      case Split::Horizontal:
          node = _parent->right();
          break;
-      case Split_Vertical:
-         if( this == _parent->_children[0] )
-            node = _parent->_children[1];
+      case Split::Vertical:
+         if( this == _parent->_children[0].get() )
+            node = _parent->_children[1].get();
          else
             node = _parent->right();
          break;
       default:
-         utile::log.write( LogLevel_Error,
+         utile::log.write( LogLevel::Error,
             "GroupNode::right(): caught an unexpected "
             "value in switch (%d)", _parent->_split );
          return NULL;
@@ -170,11 +165,11 @@ GroupNode* GroupNode::right()
    {
       switch( node->_split )
       {
-         case Split_Horizontal:
-            node = node->_children[ node->_lastAccess ];
+         case Split::Horizontal:
+            node = node->_children[ node->_lastAccess ].get();
             break;
-         case Split_Vertical:
-            node = node->_children[0];
+         case Split::Vertical:
+            node = node->_children[0].get();
             break;
       }
    }
@@ -188,10 +183,10 @@ GroupNode* GroupNode::left()
    {
       switch( _split )
       {
-         case Split_Horizontal:
-            return _children[ _lastAccess ];
-         case Split_Vertical:
-            return _children[1];
+         case Split::Horizontal:
+            return _children[ _lastAccess ].get();
+         case Split::Vertical:
+            return _children[1].get();
       }
    }
 
@@ -199,17 +194,17 @@ GroupNode* GroupNode::left()
 
    switch( _parent->_split )
    {
-      case Split_Horizontal:
+      case Split::Horizontal:
          node = _parent->left();
          break;
-      case Split_Vertical:
-         if( this == _parent->_children[1] )
-            node = _parent->_children[0];
+      case Split::Vertical:
+         if( this == _parent->_children[1].get() )
+            node = _parent->_children[0].get();
          else
             node = _parent->left();
          break;
       default:
-         utile::log.write( LogLevel_Error,
+         utile::log.write( LogLevel::Error,
             "GroupNode::left(): caught an unexpected "
             "value in switch (%d)", _parent->_split );
          return NULL;
@@ -219,11 +214,11 @@ GroupNode* GroupNode::left()
    {
       switch( node->_split )
       {
-         case Split_Horizontal:
-            node = node->_children[ node->_lastAccess ];
+         case Split::Horizontal:
+            node = node->_children[ node->_lastAccess ].get();
             break;
-         case Split_Vertical:
-            node = node->_children[1];
+         case Split::Vertical:
+            node = node->_children[1].get();
             break;
       }
    }
@@ -237,10 +232,10 @@ GroupNode* GroupNode::down()
    {
       switch( _split )
       {
-         case Split_Vertical:
-            return _children[ _lastAccess ];
-         case Split_Horizontal:
-            return _children[0];
+         case Split::Vertical:
+            return _children[ _lastAccess ].get();
+         case Split::Horizontal:
+            return _children[0].get();
       }
    }
 
@@ -248,17 +243,17 @@ GroupNode* GroupNode::down()
 
    switch( _parent->_split )
    {
-      case Split_Vertical:
+      case Split::Vertical:
          node = _parent->down();
          break;
-      case Split_Horizontal:
-         if( this == _parent->_children[0] )
-            node = _parent->_children[1];
+      case Split::Horizontal:
+         if( this == _parent->_children[0].get() )
+            node = _parent->_children[1].get();
          else
             node = _parent->down();
          break;
       default:
-         utile::log.write( LogLevel_Error,
+         utile::log.write( LogLevel::Error,
             "GroupNode::down(): caught an unexpected "
             "value in switch (%d)", _parent->_split );
          return NULL;
@@ -268,11 +263,11 @@ GroupNode* GroupNode::down()
    {
       switch( node->_split )
       {
-         case Split_Vertical:
-            node = node->_children[ node->_lastAccess ];
+         case Split::Vertical:
+            node = node->_children[ node->_lastAccess ].get();
             break;
-         case Split_Horizontal:
-            node = node->_children[0];
+         case Split::Horizontal:
+            node = node->_children[0].get();
             break;
       }
    }
@@ -286,10 +281,10 @@ GroupNode* GroupNode::up()
    {
       switch( _split )
       {
-         case Split_Vertical:
-            return _children[ _lastAccess ];
-         case Split_Horizontal:
-            return _children[1];
+         case Split::Vertical:
+            return _children[ _lastAccess ].get();
+         case Split::Horizontal:
+            return _children[1].get();
       }
    }
 
@@ -297,17 +292,17 @@ GroupNode* GroupNode::up()
 
    switch( _parent->_split )
    {
-      case Split_Vertical:
+      case Split::Vertical:
          node = _parent->up();
          break;
-      case Split_Horizontal:
-         if( this == _parent->_children[1] )
-            node = _parent->_children[0];
+      case Split::Horizontal:
+         if( this == _parent->_children[1].get() )
+            node = _parent->_children[0].get();
          else
             node = _parent->up();
          break;
       default:
-         utile::log.write( LogLevel_Error,
+         utile::log.write( LogLevel::Error,
             "GroupNode::up(): caught an unexpected "
             "value in switch (%d)", _parent->_split );
          return NULL;
@@ -317,11 +312,11 @@ GroupNode* GroupNode::up()
    {
       switch( node->_split )
       {
-         case Split_Vertical:
-            node = node->_children[ node->_lastAccess ];
+         case Split::Vertical:
+            node = node->_children[ node->_lastAccess ].get();
             break;
-         case Split_Horizontal:
-            node = node->_children[1];
+         case Split::Horizontal:
+            node = node->_children[1].get();
             break;
       }
    }
@@ -337,9 +332,9 @@ void GroupNode::fixLastAccess()
 
 void GroupNode::fixLastAccess( GroupNode* child )
 {
-   if( child == _children[0] )
+   if( child == _children[0].get() )
       _lastAccess = 0;
-   else if( child == _children[1] )
+   else if( child == _children[1].get() )
       _lastAccess = 1;
 
    if( _parent )

@@ -10,15 +10,13 @@
 #include "Commands.hpp"
 #include "utile.hpp"
 
-using namespace std;
-
 CloseCmd::CloseCmd()
 {
    usage = "";
 }
 
-void CloseCmd::execute( vector<string> params )
+void CloseCmd::execute( const std::vector<std::string>& params )
 {
-   utile::log.write( LogLevel_Trace, "Executing Close" );
+   utile::log.write( LogLevel::Trace, "Executing Close" );
    utile::close();
 }

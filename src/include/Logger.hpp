@@ -1,25 +1,23 @@
 /*
  * Logger.hpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com> 
  */
 
-#ifndef LOGGER_HPP_
-#define LOGGER_HPP_
+#pragma once
 
 #include <string>
 #include <fstream>
 #include <stdarg.h>
 
-using namespace std;
-
-/* pretty self-explanatory, I think */
-enum LogLevel
+enum class LogLevel
 {
-   LogLevel_Fatal   = 0,
-   LogLevel_Error   = 1,
-   LogLevel_Warning = 2,
-   LogLevel_Info    = 3,
-   LogLevel_Trace   = 4,
-   LogLevel_Debug   = 5
+   Fatal = 0,
+   Error,
+   Warning,
+   Info,
+   Trace,
+   Debug,
 };
 
 class Logger
@@ -27,16 +25,14 @@ class Logger
    public:
       Logger();
       ~Logger();
-      bool open( LogLevel = LogLevel_Debug );
-      void write( LogLevel, string, ... );
+      bool open( LogLevel = LogLevel::Debug );
+      void write( LogLevel, const std::string&, ... );
       void setLogLevel( LogLevel );
    
    private:
-     string logPrefix( LogLevel level );
-     void write( LogLevel, string, va_list );
+     std::string logPrefix( LogLevel level );
+     void write( LogLevel, const std::string&, va_list );
 
-     ofstream _logFile;
+     std::ofstream _logFile;
      LogLevel _maxLogLevel;
 };
-
-#endif /* LOGGER_HPP_ */

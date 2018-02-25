@@ -9,16 +9,14 @@
 #include <X11/Xlib.h>
 #include <string>
 
-using namespace std;
-
 BindCmd::BindCmd()
 {
    usage = "";
 }
 
-void BindCmd::execute( vector<string> params )
+void BindCmd::execute( const std::vector<std::string>& params )
 {
-   utile::log.write( LogLevel_Trace, "Executing bind command" );
+   utile::log.write( LogLevel::Trace, "Executing bind command" );
    if( params.size() >=4 )
    {
       unsigned int modMasks = 0;
@@ -26,7 +24,7 @@ void BindCmd::execute( vector<string> params )
             XKeysymToKeycode( utile::display,
             XStringToKeysym( params[2].c_str() ) );
       
-      vector<string> strMasks = tokenize( params[1], "," );
+      std::vector<std::string> strMasks = tokenize( params[1], "," );
 
       for( unsigned int i = 0; i < strMasks.size(); ++i )
          modMasks |= utile::masks[ strMasks[i] ];
@@ -36,15 +34,15 @@ void BindCmd::execute( vector<string> params )
                 utile::root, True, GrabModeAsync,
                 GrabModeAsync );
 
-         // remove the first "BindCmd" paramaters
-         //    from the vector and store the 
-         //    binded command
-      params.erase( params.begin(), params.begin()+3 );
       
       KeyCombo tmpCombo;
       tmpCombo.modifiers = modMasks;
       tmpCombo.key       = tmpCode;
 
-      utile::bindings[ tmpCombo ] = params;
+         // remove the first "BindCmd" paramaters
+         //    from the vector and store the 
+         //    binded command
+      utile::bindings[ tmpCombo ] = 
+          std::vector<std::string>( params.begin()+4, params.end() );
    }
 }

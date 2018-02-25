@@ -1,6 +1,8 @@
-#ifndef SPLIT_H_
-#define SPLIT_H_
+#pragma once
 
-enum Split{ Split_Horizontal, Split_Vertical };
+enum class Split
+{
+    Horizontal = 0,
+    Vertical
+};
 
-#endif

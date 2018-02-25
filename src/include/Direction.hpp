@@ -1,5 +1,8 @@
-#ifndef DIRECTION_HPP_
-#define DIRECTION_HPP_
+/*
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com> 
+ */
+#pragma once
 
 enum Direction{
    Direction_Right,
@@ -8,4 +11,3 @@ enum Direction{
    Direction_Down
 };
 
-#endif

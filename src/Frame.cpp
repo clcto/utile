@@ -2,16 +2,19 @@
  * Frame.cpp
  *   one frame/tile on the screen
  *
- * Copyright (c) 2010
+ * Copyright (c) 2010-2018
  *   Carick Wienke <carick dot wienke at gmail dot com>
  */
 
-#include <X11/Xlib.h>
-#include <stdlib.h>
-#include <vector>
-
 #include "Frame.hpp"
 #include "SmartWindow.hpp"
+
+#include <X11/Xlib.h>
+
+#include <stdlib.h>
+#include <vector>
+#include <algorithm>
+
 
 XColor Frame::active_border;
 XColor Frame::inactive_border;
@@ -122,7 +125,7 @@ unsigned int Frame::yLoc()
 
 bool Frame::close()
 {
-   utile::log.write( LogLevel_Trace, "Frame::close()\ncur: %d size: %d", _curWindow, _windows.size() );
+   utile::log.write( LogLevel::Trace, "Frame::close()\ncur: %d size: %d", _curWindow, _windows.size() );
    if( _curWindow >= 0 && _curWindow < _windows.size() )
    {
       _windows[ _curWindow ].close();
@@ -139,19 +142,21 @@ bool Frame::close()
    }
 }
 
-void Frame::remove( Window win )
+void Frame::remove( Window toRemove )
 {
-   utile::log.write( LogLevel_Trace, "Frame::remove( %d )",
-                     win );
+   utile::log.write( LogLevel::Trace, "Frame::remove( %d )",
+                     toRemove );
 
-   for( vector<SmartWindow>::iterator it = _windows.begin();
-        it < _windows.end(); ++it )
+   auto end = std::end( _windows );
+   auto it = std::find_if(
+      std::begin( _windows ),
+      end,
+      [=]( const auto& win ) { return win == toRemove; } );
+
+   if( it != end )
    {
-      if( (*it) == win )
-      {
-         _windows.erase( it );
-         --_curWindow;
-      }
+      _windows.erase( it );
+      --_curWindow;
    }
 }
 

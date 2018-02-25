@@ -10,30 +10,28 @@
 #include "Commands.hpp"
 #include "utile.hpp"
 
-using namespace std;
-
 SplitCmd::SplitCmd()
 {
    usage = "";
 }
 
-void SplitCmd::execute( vector<string> params )
+void SplitCmd::execute( const std::vector<std::string>& params )
 {
    if( params.size() < 2 )
    {
-      utile::log.write( LogLevel_Trace, "Horizontal Split" );
-      utile::split( Split_Horizontal );
+      utile::log.write( LogLevel::Trace, "Horizontal Split" );
+      utile::split( Split::Horizontal );
    }
    else if( params[1] == "h" || params[1] == "H" )
    {
-      utile::log.write( LogLevel_Trace, "Horizontal Split" );
-      utile::split( Split_Horizontal );
+      utile::log.write( LogLevel::Trace, "Horizontal Split" );
+      utile::split( Split::Horizontal );
    }
    else if( params[1] == "v" || params[1] == "v" )
    {
-      utile::log.write( LogLevel_Trace, "Vertical Split" );
-      utile::split( Split_Vertical );
+      utile::log.write( LogLevel::Trace, "Vertical Split" );
+      utile::split( Split::Vertical );
    }
    else
-      utile::log.write( LogLevel_Warning, "Unrecognized split command" );
+      utile::log.write( LogLevel::Warning, "Unrecognized split command" );
 }

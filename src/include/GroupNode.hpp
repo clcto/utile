@@ -1,9 +1,10 @@
 /*
  * GroupNode.hpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com> 
  */
 
-#ifndef GROUP_NODE_HPP_
-#define GROUP_NODE_HPP_
+#pragma once
 
 #include <X11/Xlib.h>
 #include "Frame.hpp"
@@ -16,16 +17,18 @@ class GroupNode
 {
    public:
       GroupNode();
-      GroupNode( Group*, Window root,
-             unsigned int, unsigned int, unsigned int, unsigned int,
-             GroupNode* parent = NULL, Frame* frame = NULL );
+      GroupNode( Group* group, Window root,
+             unsigned int x, unsigned int y,
+             unsigned int w, unsigned int h,
+             GroupNode* parent = nullptr, 
+             std::unique_ptr<Frame>&& frame = nullptr );
+
+      bool close();
+
       GroupNode* split( Split );
       void addWindow( Window w );
-      void init( Group*,Window root, unsigned int, 
-                 unsigned int, unsigned int, unsigned int,
-                 GroupNode* parent = NULL, Frame* frame = NULL );
-      bool close();
       void remove( Window w );
+
 
       GroupNode* getNode( Direction );
       void setActive( bool );
@@ -40,13 +43,14 @@ class GroupNode
       void fixLastAccess();
       void fixLastAccess( GroupNode* );
 
-      GroupNode* _children[2];
-      GroupNode* _parent;
-      Split _split;
-      Frame* _frame;
-      Window _root;
       Group*  _group;
+      Window _root;
+      GroupNode* _parent;
+      std::unique_ptr<Frame> _frame;
+
       int _lastAccess;
+
+      Split _split;
+      std::array< std::unique_ptr<GroupNode>, 2> _children;
 };
 
-#endif /* GROUP_NODE_HPP_ */

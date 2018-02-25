@@ -1,29 +1,31 @@
 /*
  * utile.cpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com>
  */
-
-#include <stdlib.h>
-#include <iostream>
-#include <X11/Xlib.h>
 #include "Frame.hpp"
 #include "GroupNode.hpp"
 #include "Group.hpp"
 #include "utile.hpp"
 #include "eventnames.hpp"
 #include "Direction.hpp"
+#include "Commands.hpp"
 
-using namespace std;
+#include <X11/Xlib.h>
+
+#include <stdlib.h>
+#include <iostream>
 
 Display* utile::display;
 Window   utile::root;
-string   utile::launcher;
+std::string   utile::launcher;
 Logger   utile::log;
 
-map< string, Command* >    utile::commands;
-map< KeyCombo, vector<string> >  utile::bindings;
-map< string, unsigned int> utile::masks;
-map< string, XColor > utile::colors;
-Group* utile::g;
+std::map< std::string, std::unique_ptr<Command> > utile::commands;
+std::map< KeyCombo, std::vector<std::string> > utile::bindings;
+std::map< std::string, unsigned int> utile::masks;
+std::map< std::string, XColor > utile::colors;
+std::unique_ptr<Group> utile::groups;
 
 
 int main( int argc, char** argv )
@@ -33,14 +35,14 @@ int main( int argc, char** argv )
 
 int utile::run()
 {
-   log.open( LogLevel_Debug );
-   log.write( LogLevel_Info, "utile started." );
+   log.open( LogLevel::Debug );
+   log.write( LogLevel::Info, "utile started." );
 
-      // tries to open the displaylay. quit if it fails
+      // try to open the display. quit if it fails
    display = XOpenDisplay( NULL );
    if( !display )
    {
-      log.write( LogLevel_Fatal,
+      log.write( LogLevel::Fatal,
          "Unable to open display. "
          "Make sure X is running." );
       return EXIT_FAILURE;
@@ -57,9 +59,10 @@ int utile::run()
       // initializes common masks
    initMasks();
 
-   readConfig();
+   if( !readConfig() )
+       return EXIT_FAILURE;
 
-   g = new Group( utile::root );
+   groups = std::make_unique<Group>( utile::root );
 
    XSelectInput( display, utile::root, 
                  SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask );
@@ -69,13 +72,13 @@ int utile::run()
    {
       XNextEvent( display, &event );
 
-      log.write( LogLevel_Debug, "Received Event: %s", 
+      log.write( LogLevel::Debug, "Received Event: %s", 
                  event_str[ event.type ].c_str() );
 
       switch( event.type )
       {
          case MapRequest:
-            g->getCur()->addWindow( event.xmaprequest.window ); 
+            groups->getCur()->addWindow( event.xmaprequest.window ); 
             break;
          case KeyPress:
             processKeyPress( event.xkey );
@@ -89,22 +92,24 @@ int utile::run()
 
 void utile::initCommands()
 {
-   log.write( LogLevel_Trace, "Initializing commands" );
-   commands[ "mod" ]      = new ModCmd();
-   commands[ "bind" ]     = new BindCmd();
-   commands[ "launcher" ] = new LauncherCmd();
-   commands[ "run" ]      = new RunCmd();
-   commands[ "quit" ]     = new QuitCmd();
-   commands[ "split" ]    = new SplitCmd();
-   commands[ "close" ]    = new CloseCmd();
-   commands[ "color" ]    = new ColorCmd();
-   commands[ "border" ]   = new BorderCmd();
-   commands[ "select" ]   = new SelectCmd();
+   log.write( LogLevel::Trace, "Initializing commands" );
+
+   commands.emplace( "mod", std::make_unique<ModCmd>() );
+   commands.emplace( "bind", std::make_unique<BindCmd>() );
+   commands.emplace( "launcher", std::make_unique<LauncherCmd>() );
+   commands.emplace( "run", std::make_unique<RunCmd>() );
+   commands.emplace( "quit", std::make_unique<QuitCmd>() );
+   commands.emplace( "split", std::make_unique<SplitCmd>() );
+   commands.emplace( "close", std::make_unique<CloseCmd>() );
+   commands.emplace( "color", std::make_unique<ColorCmd>() );
+   commands.emplace( "border", std::make_unique<BorderCmd>() );
+   commands.emplace( "select", std::make_unique<SelectCmd>() );
+   commands.emplace( "resize", std::make_unique<ResizeCmd>() );
 }
 
 void utile::initMasks()
 {
-   log.write( LogLevel_Trace, "Initializing default mods" );
+   log.write( LogLevel::Trace, "Initializing default mods" );
    masks[ "Shift" ] = ShiftMask;
    masks[ "Ctrl"  ] = ControlMask;
    masks[ "Mod1"  ] = Mod1Mask;
@@ -115,38 +120,42 @@ void utile::initMasks()
    masks[ "none"  ] = 0;
 }
 
-void utile::readConfig()
+bool utile::readConfig()
 {
-   log.write( LogLevel_Trace, "Started reading init file" );
-   string usr_conf;
+   log.write( LogLevel::Trace, "Started reading init file" );
+   std::string usr_conf;
    usr_conf  = getenv( "HOME" );
    usr_conf += "/.utile/utile.rc";
 
    char* sys_conf = (char*) "/etc/utile/utile.rc";
 
-   ifstream usrFile( usr_conf.c_str() );
-   ifstream sysFile( sys_conf );
+   std::ifstream usrFile( usr_conf.c_str() );
+   std::ifstream sysFile( sys_conf );
    
    if( usrFile )
    {
-      log.write( LogLevel_Debug, "Reading user init file" );
+      log.write( LogLevel::Debug, "Reading user init file" );
       parseFile( usrFile );
    }
    else if( sysFile )
    {
-      log.write( LogLevel_Debug, "Reading system init file" );
+      log.write( LogLevel::Debug, "Reading system init file" );
       parseFile( sysFile );
    }
    else
-      log.write( LogLevel_Debug, "No init files found" );
+   {
+       log.write( LogLevel::Error, "No init file found." );
+       return false;
+   }
 
-   log.write( LogLevel_Trace, "Finished reading init files" );
+   log.write( LogLevel::Trace, "Finished reading init files" );
+   return true;
 }
 
-void utile::parseFile( ifstream& file )
+void utile::parseFile( std::ifstream& file )
 {
-   string line;
-   vector<string> tokLine;
+   std::string line;
+   std::vector<std::string> tokLine;
 
       // read and process commands
    getline( file, line );
@@ -158,15 +167,15 @@ void utile::parseFile( ifstream& file )
       if( !line.empty() && line[0] != '#' )
       {
          tokLine = tokenize( line );
+
             // we checked for an empty line above
             // so we will have atleast one token here
-         Command* cmd = utile::commands[ tokLine[0] ];
-
-         if( cmd )
+         auto iter = utile::commands.find( tokLine[ 0 ] );
+         if( iter != std::end( commands ) )
+         {
+            auto& cmd = iter->second;
             cmd->execute( tokLine );  
-            // prevent the map from adding new items
-         else
-            utile::commands.erase( tokLine[0] );
+         }
        
       }
       
@@ -192,59 +201,62 @@ void utile::processKeyPress( const XKeyEvent& ev )
    kc.key       = ev.keycode;
    kc.modifiers = ev.state;
 
-   vector<string> strCmd = bindings[ kc ];
+   std::vector<std::string> strCmd = bindings[ kc ];
 
-   Command *cmd = commands[ strCmd[0] ];
-   if( cmd )
+   const auto& iter = commands.find( strCmd[0] );
+   if( iter != commands.end() )
+   {
+      auto& cmd = iter->second;
       cmd->execute(strCmd);
+   }
    else
    {
-      log.write( LogLevel_Warning, "Invalid command:" );
-      log.write( LogLevel_Warning, strCmd[0] );
-
-         // remove invalid commands
-      commands.erase( strCmd[0] );
+      log.write( LogLevel::Warning, "Invalid command:" );
+      log.write( LogLevel::Warning, strCmd[0] );
    }
 }
 
 void utile::split( Split s, float percent )
 {
-   g->split( s );
+   groups->split( s );
 }
 
 void utile::close()
 {
-   utile::log.write( LogLevel_Trace, "utile::close()" );
-   g->close();
+   utile::log.write( LogLevel::Trace, "utile::close()" );
+   groups->close();
 }
 
 // modify this! g->remove( win )
 void utile::remove( Window win )
 {
-   g->getCur()->remove( win );
+   groups->getCur()->remove( win );
 }
 
-void utile::select( Direction d )
+void utile::select( Direction direction )
 {
-   g->select( d );
+   groups->select( direction );
+}
+
+void utile::resize( Direction side, int pixels )
+{
+   groups->resize( side, pixels );
 }
 
 /* GLOBAL STRING FUNCTIONS ============= */
 
 
-vector<string> tokenize( const string& input,
-                         const string& delims )
+std::vector<std::string> tokenize( const std::string& input,
+                         const std::string& delims )
 {
-   vector<string> tokens;
-
-   string::size_type tokenStart, tokenEnd;
+   std::vector<std::string> tokens;
 
       // get the start and end of the first token
-   tokenStart = input.find_first_not_of( delims, 0 );
-   tokenEnd   = input.find_first_of( delims, tokenStart );
+   auto tokenStart = input.find_first_not_of( delims, 0 );
+   auto tokenEnd   = input.find_first_of( delims, tokenStart );
 
-   while( !( tokenStart == string::npos && 
-             tokenEnd   == string::npos ) )
+   while( !( tokenStart == std::string::npos && 
+             tokenEnd   == std::string::npos ) )
    {
          // add the token to the vector.
       tokens.push_back( input.substr( tokenStart, 
@@ -261,12 +273,10 @@ vector<string> tokenize( const string& input,
  * returns a new string with the 
  * leading and following delim characters removed
  */
-string trim( const string& input, const string& delims )
+std::string trim( const std::string& input, const std::string& delims )
 {
-   string::size_type start, end;
-
-   start = input.find_first_not_of( delims );
-   end   = input.find_last_not_of(  delims );
+   auto start = input.find_first_not_of( delims );
+   auto end   = input.find_last_not_of(  delims );
 
    if( end > start )
       return input.substr( start, end - start + 1);

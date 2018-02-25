@@ -1,5 +1,7 @@
 /*
  * SmartWindow.cpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com>
  */
 
 #include <X11/Xlib.h>
@@ -31,7 +33,7 @@ Window SmartWindow::getXWindow()
 
 void SmartWindow::close()
 {
-   utile::log.write( LogLevel_Trace, "SmartWindow::close()" );
+   utile::log.write( LogLevel::Trace, "SmartWindow::close()" );
    XEvent delEv;
    delEv.type = ClientMessage;
    delEv.xclient.window = _window;
@@ -44,7 +46,7 @@ void SmartWindow::close()
    XSendEvent( utile::display, _window, False, NoEventMask, &delEv );
 }
 
-bool SmartWindow::operator==( Window w )
+bool SmartWindow::operator==( Window w ) const
 {
    return _window == w;
 }

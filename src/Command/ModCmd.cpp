@@ -9,8 +9,6 @@
 #include "Commands.hpp"
 #include "utile.hpp"
 
-using namespace std;
-
 ModCmd::ModCmd()
 {
    usage = 
@@ -23,13 +21,13 @@ ModCmd::ModCmd()
       "  mod default super,Mod1Mask\n";
 }
 
-void ModCmd::execute( vector<string> params )
+void ModCmd::execute( const std::vector<std::string>& params )
 {
-   utile::log.write( LogLevel_Trace, "Executing mod command" );
+   utile::log.write( LogLevel::Trace, "Executing mod command" );
    if( params.size() >= 3 )
    {
       unsigned int numMask = 0;
-      vector<string> strMasks;
+      std::vector<std::string> strMasks;
       
       strMasks = tokenize( params[2], "," );
 

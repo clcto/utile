@@ -1,18 +1,15 @@
 /*
  * Frame.hpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com> 
  */
 
-#ifndef FRAME_HPP_
-#define FRAME_HPP_
+#pragma once
 
 #include <X11/Xlib.h>
 #include <vector>
 #include "SmartWindow.hpp"
 #include "utile.hpp"
-
-using namespace std;
-
-class SmartWindow;
 
 class Frame
 {
@@ -29,13 +26,13 @@ class Frame
       uint yLoc();
 
       void remove( Window w );
-      void setActive( bool );
+      void setActive( bool value );
       
       static void setInactive( XColor );
       static void setActive( XColor );
 
    private:
-      vector<SmartWindow> _windows;
+      std::vector<SmartWindow> _windows;
       unsigned char       _curWindow;
       Window              _background;
       uint                _xLoc,  _yLoc;
@@ -43,5 +40,3 @@ class Frame
 
       static XColor inactive_border, active_border;
 };
-
-#endif /* FRAME_HPP_ */

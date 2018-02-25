@@ -1,23 +1,22 @@
 /*
  * Command.hpp
+ * Copyright (c) 2010-2018
+ *   Carick Wienke <carick dot wienke at gmail dot com> 
  */
 
-#ifndef COMMAND_HPP_
-#define COMMAND_HPP_
+#pragma once
 
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class Command
 {
-   protected:
-      string defaults;
-      string usage;
-   
    public:
-      virtual void execute( vector<string> args ) = 0;
+      virtual ~Command() { }
+      virtual void execute( const std::vector<std::string>& params ) = 0;
+
+   protected:
+      std::string defaults;
+      std::string usage;
 };
 
-#endif // COMMAND_HPP_
