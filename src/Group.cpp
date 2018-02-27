@@ -82,5 +82,5 @@ void Group::select( Direction d )
 void Group::resize( Direction side, int pixels )
 {
     utile::log.write( LogLevel::Debug, "resizing" );
-    
+    _curNode->resize( side, pixels );
 }

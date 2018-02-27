@@ -43,6 +43,6 @@ void BindCmd::execute( const std::vector<std::string>& params )
          //    from the vector and store the 
          //    binded command
       utile::bindings[ tmpCombo ] = 
-          std::vector<std::string>( params.begin()+4, params.end() );
+          std::vector<std::string>( params.begin()+3, params.end() );
    }
 }

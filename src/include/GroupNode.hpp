@@ -18,17 +18,17 @@ class GroupNode
    public:
       GroupNode();
       GroupNode( Group* group, Window root,
-             unsigned int x, unsigned int y,
-             unsigned int w, unsigned int h,
+             int x, int y, int w, int h,
              GroupNode* parent = nullptr, 
              std::unique_ptr<Frame>&& frame = nullptr );
 
       bool close();
 
       GroupNode* split( Split );
+      void resize( Direction side, int pixels );
+
       void addWindow( Window w );
       void remove( Window w );
-
 
       GroupNode* getNode( Direction );
       void setActive( bool );
@@ -43,6 +43,11 @@ class GroupNode
       void fixLastAccess();
       void fixLastAccess( GroupNode* );
 
+      GroupNode* findParentSplit( Direction side );
+      void doResize( Direction side, int pixels );
+
+      GroupNode* otherChild( GroupNode* child );
+
       Group*  _group;
       Window _root;
       GroupNode* _parent;
@@ -52,5 +57,10 @@ class GroupNode
 
       Split _split;
       std::array< std::unique_ptr<GroupNode>, 2> _children;
+
+      int _xLoc;
+      int _yLoc;
+      int _width;
+      int _height;
 };
 

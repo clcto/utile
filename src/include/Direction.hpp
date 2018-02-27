@@ -4,10 +4,17 @@
  */
 #pragma once
 
-enum Direction{
-   Direction_Right,
-   Direction_Left,
-   Direction_Up,
-   Direction_Down
+#include <string>
+
+enum class Direction {
+   Right,
+   Left,
+   Up,
+   Down
 };
 
+// string functions
+Direction parseDirection( const std::string& input );
+std::string toString( Direction direction );
+
+Direction opposite( Direction direction );
