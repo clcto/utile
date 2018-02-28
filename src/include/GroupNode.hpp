@@ -43,8 +43,9 @@ class GroupNode
       void fixLastAccess();
       void fixLastAccess( GroupNode* );
 
-      GroupNode* findParentSplit( Direction side );
+      GroupNode* findParentSplit( Edge side );
       void doResize( Direction side, int pixels );
+      void doResize( int x, int y, int width, int height );
 
       GroupNode* otherChild( GroupNode* child );
 
@@ -62,5 +63,7 @@ class GroupNode
       int _yLoc;
       int _width;
       int _height;
+
+      float _firstChildRatio;
 };
 

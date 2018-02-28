@@ -39,17 +39,26 @@ namespace {
         auto found = std::find( std::begin( values ), std::end( values ), input );
         return found != std::end( values );
     }
-    
 
-    [[ noreturn ]]
-    void throwBadDirection( Direction direction )
+    template <typename I>
+    auto as_printable_int( I i ) -> decltype( +i ) { return +i; }
+
+    template <typename E>
+    auto enum_as_printable_int( E e ) -> decltype( 
+        as_printable_int( static_cast< typename std::underlying_type<E>::type >( e ) ) )
     {
-        std::ostringstream ss;
-        auto value =
-            static_cast<std::underlying_type<Direction>::type>( direction );
-        ss << "Direction value not recognized: " << value;
-        throw std::invalid_argument( ss.str() );
+        using underlying = typename std::underlying_type<E>::type;
+        return as_printable_int( static_cast< underlying >( e ) );
     }
+}
+
+[[ noreturn ]]
+void throwBadDirection( Direction direction )
+{
+    std::ostringstream ss;
+    auto value = enum_as_printable_int( direction );
+    ss << "Direction value not recognized: " << value;
+    throw std::invalid_argument( ss.str() );
 }
 
 Direction parseDirection( const std::string& input )

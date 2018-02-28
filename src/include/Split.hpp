@@ -1,8 +1,11 @@
 #pragma once
 
-enum class Split
-{
-    Horizontal = 0,
-    Vertical
-};
+#include "Edge.hpp"
+
+using Split = Orientation;
+//enum class Split
+//{
+//    Horizontal = 0,
+//    Vertical
+//};
 

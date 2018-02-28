@@ -84,12 +84,14 @@ GroupNode* GroupNode::split( Split s )
    _split = s;
    _frame = nullptr;
    _lastAccess = 0;
+   _firstChildRatio = 0.5f;
    return _children[0].get();
 }
 
 void GroupNode::resize( Direction side, int pixels )
 {
-    auto resizeRoot = findParentSplit( side );
+    auto edge = Edge::fromDirection( side );
+    auto resizeRoot = findParentSplit( edge );
     if( !resizeRoot )
     {
         utile::log.write( LogLevel::Info, 
@@ -125,6 +127,14 @@ void GroupNode::resize( Direction side, int pixels )
         travParent = travChild->_parent;
     }
 
+    // (edge.index() * 2 - 1) converts edge index 0 (right or top) to -1
+    // and edge index 1 (left or bot) to 1 so that we can multiply
+    // it by the pixels to get how many pixels the first child grew or
+    // shrank, which we can add to the current ratio
+    auto firstChildResize = (edge.index() * 2 - 1) * pixels;
+    auto resizeRatio = static_cast<float>( firstChildResize ) / travParent->_width;
+    travParent->_firstChildRatio += resizeRatio;
+
     // have to invert the side/pixels when resizing the other side
     // of the resize root to keep the screen tiled.
     auto oppositeSide = opposite( side );
@@ -135,21 +145,36 @@ void GroupNode::resize( Direction side, int pixels )
 
 void GroupNode::doResize( Direction side, int pixels )
 {
+    auto newX = _xLoc;
+    auto newY = _yLoc;
+    auto newWidth = _width;
+    auto newHeight = _height;
+
     // update current size
     if( side == Direction::Up || side == Direction::Down )
     {
-        _height += pixels;
+        newHeight += pixels;
         if( side == Direction::Up )
-            _yLoc -= pixels;
+            newY -= pixels;
     }
 
     if( side == Direction::Right || side == Direction::Left )
     {
-        _width += pixels;
+        newWidth += pixels;
         if( side == Direction::Left )
-            _xLoc -= pixels;
+            newX -= pixels;
     }
 
+    doResize( newX, newY, newWidth, newHeight );
+
+}
+
+void GroupNode::doResize( int newX, int newY, int newWidth, int newHeight )
+{
+    _xLoc = newX;
+    _yLoc = newY;
+    _width = newWidth;
+    _height = newHeight;
     // if we are a leaf, just resize
     if( _frame )
     {
@@ -157,32 +182,39 @@ void GroupNode::doResize( Direction side, int pixels )
     }
     else // we have children, tell them to resize
     {
-        // if we are resizing parallel to the split
-        // then we scale the resize, just half for each child
-        // 
-        // otherwise (if resizing perpendicular), all
-        // children get the same resize
+        //auto deltaX = _xLoc - newX;
+        //auto deltaY = _yLoc - newY;
+        //auto deltaWidth = _width - newWidth;
+        //auto deltaHeight = _height - _newHeight;
+        //auto deltaRight = deltaX + deltaWidth;
+        //auto deltaBot = deltaY + deltaHeight;
 
-        auto parallelSplit =
-            side == Direction::Right || side == Direction::Left ?
-                Split::Vertical :
-                Split::Horizontal;
-                 
-        if( _split == parallelSplit )
-        {
-            const auto firstChildResize = pixels / 2;
-            _children[ 0 ]->doResize( side, firstChildResize );
 
-            const auto secondChildResize = pixels - firstChildResize;
-            _children[ 1 ]->doResize( side, secondChildResize );
-        }
-        else
+
+        // if _split == Split::Horizonta
+        auto firstX = _xLoc;
+        auto firstY = _yLoc;
+        auto firstW = _width;
+        auto firstH = static_cast<int>( _firstChildRatio * _height );
+
+        auto secX = firstX;
+        auto secY = firstY + firstH;
+        auto secW = firstW;
+        auto secH = _height - firstH;
+
+        if( _split == Split::Vertical )
         {
-            for( auto& child : _children )
-            {
-                child->doResize( side, pixels );
-            }
+            firstW = static_cast<int>( _firstChildRatio * _width );
+            firstH = _height;
+
+            secX = firstX + firstW;
+            secY = firstY;
+            secW = _width - firstW;
+            secH = firstH;
         }
+
+        _children[ 0 ]->doResize( firstX, firstY, firstW, firstH );
+        _children[ 1 ]->doResize( secX, secY, secW, secH );
     }
 }
 
@@ -443,7 +475,7 @@ void GroupNode::fixLastAccess( GroupNode* child )
       _parent->fixLastAccess( this );
 }
 
-GroupNode* GroupNode::findParentSplit( Direction side )
+GroupNode* GroupNode::findParentSplit( Edge side )
 {
 
     // Horizontal Split
@@ -459,14 +491,10 @@ GroupNode* GroupNode::findParentSplit( Direction side )
     //    +  0  |  1  +
     //    |     |     |
     //    +-----------+
-    auto splitType =
-        side == Direction::Left || side == Direction::Right ?
-            Split::Vertical :
-            Split::Horizontal;
-    auto childIndex = 
-        side == Direction::Right || side == Direction::Down ?
-            0 :
-            1;
+    auto splitType = side.parallel();
+    // we need to switch the side index,
+    //   ie. right edge means we are the left child, the edge is to our right
+    auto childIndex = 1 - side.index();
 
     auto curChild = this;
     auto curNode = curChild->_parent;
@@ -502,5 +530,4 @@ GroupNode* GroupNode::otherChild( GroupNode* child )
 
     throw std::invalid_argument( "child provided is not one of the node's children" );
 }
-
 

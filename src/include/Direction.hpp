@@ -13,8 +13,12 @@ enum class Direction {
    Down
 };
 
+
 // string functions
 Direction parseDirection( const std::string& input );
 std::string toString( Direction direction );
 
 Direction opposite( Direction direction );
+
+[[ noreturn ]]
+void throwBadDirection( Direction direction );
